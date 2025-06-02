@@ -1,19 +1,18 @@
 @echo off
-echo 🚀 Starting Order System Development Server...
+echo 🚀 Starting Order System Development...
 
-REM Set environment variables
+REM TODO: Set your Supabase environment variables here
+REM Get keys from: https://supabase.com/dashboard/project/zezcsjltcbajkuqyxupt/settings/api
 set SUPABASE_URL=https://zezcsjltcbajkuqyxupt.supabase.co
-set SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplemNzamx0Y2Jhamt1cXl4dXB0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzNDg2NjAsImV4cCI6MjA2MzkyNDY2MH0.EUlrFj5VF_fpNHD4QjLXD4YQqZLMdT4xTqKHlzp-vEQ
+set SUPABASE_ANON_KEY=PASTE_YOUR_ANON_KEY_HERE
 
-echo ✅ Environment variables set
+echo 🔧 Environment Setup:
 echo 🌐 Supabase URL: %SUPABASE_URL%
-echo 🔑 Anon Key: Set
+echo 🔑 Anon Key: [CONFIGURED]
 
-REM Navigate to frontend and start development server
-echo 📁 Navigating to frontend directory...
+echo.
+echo 🌐 Starting development server...
 cd frontend
-
-echo 🔧 Starting Nuxt development server...
 npm run dev
 
 pause 
