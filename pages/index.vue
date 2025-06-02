@@ -156,10 +156,6 @@ const fetchFormData = async () => {
     pending.value = true
     error.value = null
     showDatabaseWarning.value = false
-    
-    console.log('Fetching form data...')
-    console.log('Supabase URL:', config.public.supabaseUrl)
-    console.log('Anon Key available:', !!config.public.supabaseAnonKey)
 
     const supabase = useSupabase()
 
@@ -170,7 +166,6 @@ const fetchFormData = async () => {
     ])
 
     if (productsResult.error) {
-      console.warn(`Database not accessible, using mock data. Error: ${productsResult.error.message}`)
       // Use mock data instead of throwing error
       data.value = {
         products: mockProducts,
@@ -181,7 +176,6 @@ const fetchFormData = async () => {
     }
 
     if (countriesResult.error) {
-      console.warn(`Countries not accessible, using mock data. Error: ${countriesResult.error.message}`)
       // Use mock data instead of throwing error
       data.value = {
         products: mockProducts,
@@ -191,9 +185,6 @@ const fetchFormData = async () => {
       return
     }
 
-    console.log('Products response:', productsResult.data)
-    console.log('Countries response:', countriesResult.data)
-
     data.value = {
       products: productsResult.data || mockProducts,
       countries: countriesResult.data?.map(c => ({ name: c.country_name })) || mockCountries
@@ -201,7 +192,6 @@ const fetchFormData = async () => {
 
     // If we got empty data, use mock data
     if (!data.value.products.length || !data.value.countries.length) {
-      console.warn('Database returned empty data, using mock data')
       data.value = {
         products: mockProducts,
         countries: mockCountries
@@ -210,10 +200,6 @@ const fetchFormData = async () => {
     }
 
   } catch (err) {
-    console.error('Failed to fetch form data:', err)
-    console.error('Error details:', err.message)
-    console.warn('Using mock data due to database error')
-    
     // Use mock data as fallback
     data.value = {
       products: mockProducts,

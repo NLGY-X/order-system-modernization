@@ -110,10 +110,24 @@
 
       <!-- Pricing Grid -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-3">
-          Pricing by Quantity & PPP Tier *
-        </label>
-        <div class="border border-gray-300 rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between mb-3">
+          <label class="block text-sm font-medium text-gray-700">
+            Pricing by Quantity & PPP Tier
+          </label>
+          <div class="text-sm text-gray-500">
+            <span class="inline-flex items-center">
+              <input
+                id="update-pricing"
+                v-model="updatePricing"
+                type="checkbox"
+                class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              />
+              <label for="update-pricing" class="ml-2">Update pricing (leave unchecked to keep existing prices)</label>
+            </span>
+          </div>
+        </div>
+        
+        <div class="border border-gray-300 rounded-lg overflow-hidden" :class="{ 'opacity-50': !updatePricing }">
           <table class="min-w-full">
             <thead class="bg-gray-50">
               <tr>
@@ -133,8 +147,9 @@
                     type="number"
                     step="0.01"
                     min="0"
-                    required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    :required="updatePricing"
+                    :disabled="!updatePricing"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                     placeholder="0.00"
                   />
                 </td>
@@ -144,8 +159,9 @@
                     type="number"
                     step="0.01"
                     min="0"
-                    required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    :required="updatePricing"
+                    :disabled="!updatePricing"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                     placeholder="0.00"
                   />
                 </td>
@@ -155,8 +171,9 @@
                     type="number"
                     step="0.01"
                     min="0"
-                    required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    :required="updatePricing"
+                    :disabled="!updatePricing"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                     placeholder="0.00"
                   />
                 </td>
@@ -166,8 +183,9 @@
                     type="number"
                     step="0.01"
                     min="0"
-                    required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    :required="updatePricing"
+                    :disabled="!updatePricing"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                     placeholder="0.00"
                   />
                 </td>
@@ -176,7 +194,8 @@
           </table>
         </div>
         <p class="mt-2 text-sm text-gray-500">
-          Enter prices for each quantity tier and PPP tier combination. All fields are required.
+          <span v-if="updatePricing">Enter prices for each quantity tier and PPP tier combination. All fields are required when updating pricing.</span>
+          <span v-else>Current pricing will be preserved. Check the box above to modify pricing.</span>
         </p>
       </div>
 
@@ -225,6 +244,7 @@ const productId = route.params.id
 const loading = ref(true)
 const saving = ref(false)
 const product = ref(null)
+const updatePricing = ref(false)
 
 // Quantity tiers
 const quantityTiers = ['1-100', '101-400', '401-800', '801+']
@@ -300,14 +320,16 @@ const saveProduct = async () => {
       return
     }
 
-    // Check if all pricing fields are filled
-    const allPricesValid = productForm.value.pricing.every(tier => 
-      tier.global > 0 && tier.tier1 > 0 && tier.tier2 > 0 && tier.tier3 > 0
-    )
+    // Only validate pricing if user wants to update it
+    if (updatePricing.value) {
+      const allPricesValid = productForm.value.pricing.every(tier => 
+        tier.global > 0 && tier.tier1 > 0 && tier.tier2 > 0 && tier.tier3 > 0
+      )
 
-    if (!allPricesValid) {
-      alert('Please fill in all pricing fields with values greater than 0')
-      return
+      if (!allPricesValid) {
+        alert('Please fill in all pricing fields with values greater than 0')
+        return
+      }
     }
 
     // Update product
@@ -321,37 +343,40 @@ const saveProduct = async () => {
 
     if (updateError) throw updateError
 
-    // Delete existing pricing data
-    const { error: deleteError } = await supabase
-      .from('product_prices')
-      .delete()
-      .eq('product_id', productId)
-
-    if (deleteError) throw deleteError
-
-    // Insert new pricing data
-    const pricingData = []
-    quantityTiers.forEach((tier, index) => {
-      const tierPricing = productForm.value.pricing[index]
-      
-      Object.entries(tierPricing).forEach(([pppTier, price]) => {
-        if (price > 0) {
-          pricingData.push({
-            product_id: productId,
-            quantity_tier: tier,
-            ppp_tier: pppTier.toUpperCase(),
-            price: price
-          })
-        }
-      })
-    })
-
-    if (pricingData.length > 0) {
-      const { error: pricingError } = await supabase
+    // Only update pricing if user checked the box
+    if (updatePricing.value) {
+      // Delete existing pricing data
+      const { error: deleteError } = await supabase
         .from('product_prices')
-        .insert(pricingData)
+        .delete()
+        .eq('product_id', productId)
 
-      if (pricingError) throw pricingError
+      if (deleteError) throw deleteError
+
+      // Insert new pricing data
+      const pricingData = []
+      quantityTiers.forEach((tier, index) => {
+        const tierPricing = productForm.value.pricing[index]
+        
+        Object.entries(tierPricing).forEach(([pppTier, price]) => {
+          if (price > 0) {
+            pricingData.push({
+              product_id: productId,
+              quantity_tier: tier,
+              ppp_tier: pppTier.toUpperCase(),
+              price: price
+            })
+          }
+        })
+      })
+
+      if (pricingData.length > 0) {
+        const { error: pricingError } = await supabase
+          .from('product_prices')
+          .insert(pricingData)
+
+        if (pricingError) throw pricingError
+      }
     }
 
     // Success - redirect to products page
