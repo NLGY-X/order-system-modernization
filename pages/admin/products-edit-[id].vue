@@ -290,13 +290,25 @@ const loadProduct = async () => {
 
     // Organize pricing data by quantity tier and PPP tier
     quantityTiers.forEach((tier, index) => {
-      const tierPrices = pricingData.filter(p => p.quantity_tier === tier)
+      // Map quantity tier display names to actual min/max quantities
+      const quantityRanges = [
+        { min: 1, max: 100 },    // 1-100
+        { min: 101, max: 400 },  // 101-400
+        { min: 401, max: 800 },  // 401-800
+        { min: 801, max: null }  // 801+
+      ]
+      
+      const range = quantityRanges[index]
+      const tierPrices = pricingData.filter(p => 
+        p.min_quantity === range.min && 
+        (range.max === null ? p.max_quantity === null : p.max_quantity === range.max)
+      )
       
       productForm.value.pricing[index] = {
-        global: tierPrices.find(p => p.ppp_tier === 'GLOBAL')?.price || 0,
-        tier1: tierPrices.find(p => p.ppp_tier === 'TIER1')?.price || 0,
-        tier2: tierPrices.find(p => p.ppp_tier === 'TIER2')?.price || 0,
-        tier3: tierPrices.find(p => p.ppp_tier === 'TIER3')?.price || 0
+        global: tierPrices.find(p => p.ppp_tier === 'Global')?.price_usd || 0,
+        tier1: tierPrices.find(p => p.ppp_tier === 'Tier 1')?.price_usd || 0,
+        tier2: tierPrices.find(p => p.ppp_tier === 'Tier 2')?.price_usd || 0,
+        tier3: tierPrices.find(p => p.ppp_tier === 'Tier 3')?.price_usd || 0
       }
     })
 
@@ -359,24 +371,32 @@ const saveProduct = async () => {
 
       // Convert form data to database format
       productForm.value.pricing.forEach((tier, tierIndex) => {
-        const tierSizes = ['1', '5', '20', '50'] // quantity_tier values
-        const tierSize = tierSizes[tierIndex]
+        // Map to correct quantity ranges
+        const quantityRanges = [
+          { min: 1, max: 100 },    // 1-100
+          { min: 101, max: 400 },  // 101-400
+          { min: 401, max: 800 },  // 401-800
+          { min: 801, max: null }  // 801+
+        ]
+        
+        const range = quantityRanges[tierIndex]
 
         // Map form field names to database ppp_tier values
         const pppMapping = {
-          'global': 'global',
-          'tier1': 'tier_1', 
-          'tier2': 'tier_2',
-          'tier3': 'tier_3'
+          'global': 'Global',
+          'tier1': 'Tier 1', 
+          'tier2': 'Tier 2',
+          'tier3': 'Tier 3'
         }
 
         Object.entries(pppMapping).forEach(([formField, dbTier]) => {
           if (tier[formField] > 0) {
             pricesToInsert.push({
               product_id: productId,
-              quantity_tier: tierSize,
+              min_quantity: range.min,
+              max_quantity: range.max,
               ppp_tier: dbTier,
-              price: tier[formField]
+              price_usd: tier[formField]
             })
           }
         })
@@ -392,6 +412,9 @@ const saveProduct = async () => {
     }
 
     alert('Product updated successfully!')
+    
+    // Refresh the product data to show updated information
+    await loadProduct()
     
     // Navigate back to products list
     await navigateTo('/admin/products')
