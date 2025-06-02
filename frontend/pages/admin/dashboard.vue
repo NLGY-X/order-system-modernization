@@ -119,7 +119,7 @@
             <div class="space-y-4">
               <!-- Add Product -->
               <NuxtLink
-                to="/admin/products/new"
+                to="/admin/products-new"
                 class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <div class="p-2 bg-blue-100 rounded-lg">
