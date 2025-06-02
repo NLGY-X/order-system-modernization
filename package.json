@@ -2,18 +2,25 @@
   "name": "order-system-modernization",
   "version": "1.0.0",
   "description": "Modern order system with Supabase, Stripe, and Vue.js",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "start": "cd frontend && npm run preview",
-    "install-deps": "npm install && cd frontend && npm install",
-    "setup": "npm run install-deps"
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8",
     "dotenv": "^16.5.0",
+    "nuxt": "^3.17.4",
     "pg": "^8.16.0",
-    "playwright": "^1.52.0"
+    "playwright": "^1.52.0",
+    "vue": "^3.5.15",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^7.0.0-beta.0"
   },
   "engines": {
     "node": ">=18.0.0"
