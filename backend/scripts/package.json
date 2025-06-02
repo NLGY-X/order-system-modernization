@@ -1,0 +1,15 @@
+{
+  "name": "order-system-migration-scripts",
+  "version": "1.0.0",
+  "description": "Data migration scripts for Order System",
+  "type": "module",
+  "scripts": {
+    "migrate-pricing": "node migrate-pricing.js",
+    "migrate-ppp": "node migrate-ppp.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.3.1"
+  }
+} 

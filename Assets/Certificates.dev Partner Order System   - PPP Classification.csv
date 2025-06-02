@@ -1,0 +1,254 @@
+Country,ISO Code,PPP Bracket,Discount Level (%)
+Afghanistan,AF,PPP1,20
+Åland Islands,AX,PPP3,50
+Albania,AL,PPP3,50
+Algeria,DZ,PPP3,50
+American Samoa,AS,PPP3,50
+Andorra,AD,PPP3,50
+Angola,AO,PPP3,50
+Anguilla,AI,Global,0
+Antarctica,AQ,Global,0
+Antigua and Barbuda,AG,Global,0
+Argentina,AR,PPP3,50
+Armenia,AM,PPP3,50
+Aruba,AW,Global,0
+Asia / Pacific Region,AP,Global,0
+Australia,AU,Global,0
+Austria,AT,Global,0
+Azerbaijan,AZ,PPP3,50
+Bahamas,BS,Global,0
+Bahrain,BH,Global,0
+Bangladesh,BD,PPP3,50
+Barbados,BB,Global,0
+Belarus,BY,PPP3,50
+Belgium,BE,Global,0
+Belize,BZ,Global,0
+Benin,BJ,PPP3,50
+Bermuda,BM,Global,0
+Bhutan,BT,Global,0
+Bolivia,BO,PPP3,50
+"Bonaire, Sint Eustatius and Saba",BQ,Global,0
+Bosnia and Herzegovina,BA,PPP3,50
+Botswana,BW,PPP3,50
+Bouvet Island,BV,Global,0
+Brazil,BR,PPP3,50
+British Indian Ocean Territory,IO,Global,0
+Brunei Darussalam,BN,Global,0
+Bulgaria,BG,PPP2,35
+Burkina Faso,BF,PPP3,50
+Burundi,BI,PPP3,50
+Cambodia,KH,Global,0
+Cameroon,CM,PPP3,50
+Canada,CA,Global,0
+Cape Verde,CV,PPP3,50
+Cayman Islands,KY,Global,0
+Central African Republic,CF,PPP3,50
+Chad,TD,PPP3,50
+Chile,CL,PPP3,50
+China,CN,PPP1,20
+Christmas Island,CX,Global,0
+Cocos (Keeling) Islands,CC,Global,0
+Colombia,CO,PPP3,50
+Comoros,KM,PPP3,50
+Congo,CG,PPP3,50
+"Congo, the Democratic Republic of",CD,PPP3,50
+Cook Islands,CK,Global,0
+Costa Rica,CR,PPP2,35
+Côte d'Ivoire,CI,PPP3,50
+Croatia,HR,PPP1,20
+Cuba,CU,Global,0
+Curaçao,CW,Global,0
+Cyprus,CY,PPP1,20
+Czech Republic,CZ,PPP1,20
+Denmark,DK,Global,0
+Djibouti,DJ,PPP3,50
+Dominica,DM,Global,0
+Dominican Republic,DO,PPP3,50
+Ecuador,EC,PPP3,50
+Egypt,EG,PPP3,50
+El Salvador,SV,Global,0
+Equatorial Guinea,GQ,PPP3,50
+Eritrea,ER,PPP3,50
+Estonia,EE,PPP1,20
+Ethiopia,ET,PPP3,50
+Falkland Islands (Malvinas),FK,Global,0
+Faroe Islands,FO,Global,0
+Fiji,FJ,Global,0
+Finland,FI,Global,0
+France,FR,Global,0
+French Guiana,GF,Global,0
+French Polynesia,PF,Global,0
+French Southern Territories,TF,Global,0
+Gabon,GA,PPP3,50
+Gambia,GM,PPP3,50
+Georgia,GE,PPP3,50
+Germany,DE,Global,0
+Ghana,GH,PPP3,50
+Gibraltar,GI,Global,0
+Greece,GR,PPP2,35
+Greenland,GL,Global,0
+Grenada,GD,Global,0
+Guadeloupe,GP,Global,0
+Guam,GU,Global,0
+Guatemala,GT,PPP3,50
+Guernsey,GG,Global,0
+Guinea,GN,PPP3,50
+Guinea-Bissau,GW,PPP3,50
+Guyana,GY,Global,0
+Haiti,HT,Global,0
+Heard Island and Mcdonald Islands,HM,Global,0
+Holy See (Vatican City State),VA,Global,0
+Honduras,HN,PPP3,50
+Hong Kong,HK,Global,0
+Hungary,HU,PPP2,35
+Iceland,IS,Global,0
+India,IN,PPP3,50
+Indonesia,ID,PPP3,50
+"Iran, Islamic Republic of",IR,Global,0
+Iraq,IQ,PPP3,50
+Ireland,IE,Global,0
+Isle of Man,IM,Global,0
+Israel,IL,PPP3,50
+Italy,IT,PPP1,20
+Jamaica,JM,PPP3,50
+Japan,JP,Global,0
+Jersey,JE,Global,0
+Jordan,JO,PPP3,50
+Kazakhstan,KZ,PPP3,50
+Kenya,KE,PPP3,50
+Kiribati,KI,Global,0
+"Korea, Democratic People's Republic of",KP,Global,0
+"Korea, Republic of",KR,Global,0
+Kosovo,XK,PPP3,50
+Kuwait,KW,PPP3,50
+Kyrgyzstan,KG,Global,0
+Lao People's Democratic Republic,LA,Global,0
+Latvia,LV,PPP1,20
+Lebanon,LB,PPP3,50
+Lesotho,LS,PPP3,50
+Liberia,LR,PPP3,50
+Libya,LY,PPP3,50
+Liechtenstein,LI,Global,0
+Lithuania,LT,PPP1,20
+Luxembourg,LU,Global,0
+Macao,MO,Global,0
+"Macedonia, the Former Yugoslav Republic of",MK,PPP3,50
+Madagascar,MG,PPP3,50
+Malawi,MW,PPP3,50
+Malaysia,MY,PPP2,35
+Maldives,MV,Global,0
+Mali,ML,PPP3,50
+Malta,MT,PPP1,20
+Marshall Islands,MH,Global,0
+Martinique,MQ,Global,0
+Mauritania,MR,PPP3,50
+Mauritius,MU,PPP3,50
+Mayotte,YT,PPP3,50
+Mexico,MX,PPP3,50
+"Micronesia, Federated States of",FM,Global,0
+"Moldova, Republic of",MD,PPP3,50
+Monaco,MC,Global,0
+Mongolia,MN,Global,0
+Montenegro,ME,PPP3,50
+Montserrat,MS,Global,0
+Morocco,MA,PPP3,50
+Mozambique,MZ,PPP3,50
+Myanmar,MM,Global,0
+Namibia,NA,PPP3,50
+Nauru,NR,Global,0
+Nepal,NP,PPP3,50
+Netherlands,NL,Global,0
+Netherlands Antilles,AN,Global,0
+New Caledonia,NC,Global,0
+New Zealand,NZ,Global,0
+Nicaragua,NI,Global,0
+Niger,NE,PPP3,50
+Nigeria,NG,PPP3,50
+Niue,NU,Global,0
+Norfolk Island,NF,Global,0
+Northern Mariana Islands,MP,Global,0
+Norway,NO,Global,0
+Oman,OM,PPP3,50
+Pakistan,PK,PPP3,50
+Palau,PW,Global,0
+"Palestinian Territory, Occupied",PS,Global,0
+Panama,PA,PPP2,35
+Papua New Guinea,PG,Global,0
+Paraguay,PY,Global,0
+Peru,PE,PPP3,50
+Philippines,PH,PPP3,50
+Pitcairn,PN,Global,0
+Poland,PL,PPP1,20
+Portugal,PT,PPP1,20
+Puerto Rico,PR,PPP1,20
+Qatar,QA,PPP3,50
+Reunion,RE,PPP3,50
+Romania,RO,PPP2,35
+Russian Federation,RU,PPP3,50
+Rwanda,RW,PPP3,50
+Saint Barthelemy,BL,Global,0
+Saint Helena,SH,PPP3,50
+Saint Kitts and Nevis,KN,Global,0
+Saint Lucia,LC,Global,0
+Saint Martin,MF,Global,0
+Saint Pierre and Miquelon,PM,Global,0
+Saint Vincent and the Grenadines,VC,Global,0
+Samoa,WS,Global,0
+San Marino,SM,Global,0
+Sao Tome and Principe,ST,PPP3,50
+Saudi Arabia,SA,Global,0
+Senegal,SN,PPP3,50
+Serbia,RS,PPP3,50
+Serbia and Montenegro,CS,Global,0
+Seychelles,SC,PPP3,50
+Sierra Leone,SL,PPP3,50
+Singapore,SG,Global,0
+Sint Maarten,SX,Global,0
+Slovakia,SK,PPP1,20
+Slovenia,SI,PPP1,20
+Solomon Islands,SB,Global,0
+Somalia,SO,PPP3,50
+South Africa,ZA,PPP1,20
+South Georgia and the South Sandwich Islands,GS,PPP3,50
+South Sudan,SS,Global,0
+Spain,ES,PPP1,20
+Sri Lanka,LK,PPP3,50
+Sudan,SD,PPP3,50
+Suriname,SR,Global,0
+Svalbard and Jan Mayen,SJ,Global,0
+Swaziland,SZ,PPP3,50
+Sweden,SE,Global,0
+Switzerland,CH,Global,0
+Syrian Arab Republic,SY,Global,0
+Taiwan,TW,Global,0
+Tajikistan,TJ,Global,0
+"Tanzania, United Republic of",TZ,PPP3,50
+Thailand,TH,PPP3,50
+Timor-Leste,TL,Global,0
+Togo,TG,PPP3,50
+Tokelau,TK,Global,0
+Tonga,TO,Global,0
+Trinidad and Tobago,TT,PPP2,35
+Tunisia,TN,PPP3,50
+Turkey,TR,PPP3,50
+Turkmenistan,TM,Global,0
+Turks and Caicos Islands,TC,Global,0
+Tuvalu,TV,Global,0
+Uganda,UG,PPP3,50
+Ukraine,UA,PPP3,50
+United Arab Emirates,AE,Global,0
+United Kingdom,GB,Global,0
+United States,US,Global,0
+United States Minor Outlying Islands,UM,Global,0
+Uruguay,UY,PPP2,35
+Uzbekistan,UZ,PPP3,50
+Vanuatu,VU,Global,0
+Venezuela,VE,PPP3,50
+Vietnam,VN,PPP3,50
+"Virgin Islands, British",VG,Global,0
+"Virgin Islands, U.S.",VI,Global,0
+Wallis and Futuna,WF,Global,0
+Western Sahara,EH,PPP3,50
+Yemen,YE,Global,0
+Zambia,ZM,PPP3,50
+Zimbabwe,ZW,PPP3,50
