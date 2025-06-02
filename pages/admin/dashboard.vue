@@ -196,6 +196,22 @@
                   <p class="text-xs text-gray-500">Sales reports and insights</p>
                 </div>
               </NuxtLink>
+
+              <!-- Manage Admin Users -->
+              <NuxtLink
+                to="/admin/users"
+                class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div class="p-2 bg-red-100 rounded-lg">
+                  <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                  </svg>
+                </div>
+                <div class="ml-4">
+                  <p class="text-sm font-medium text-gray-900">Manage Admin Users</p>
+                  <p class="text-xs text-gray-500">Invite and manage admin accounts</p>
+                </div>
+              </NuxtLink>
             </div>
           </div>
         </div>
