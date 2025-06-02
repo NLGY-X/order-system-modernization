@@ -126,15 +126,36 @@ const handleSubmit = async () => {
 
     console.log('Order created successfully:', orderData)
 
-    // Success
-    submissionStatus.value = 'success'
-    
-    // Reset form
-    form.value = {
-      productId: '',
-      countryName: '',
-      quantity: 1,
-      email: ''
+    // Create Stripe checkout session
+    const currentUrl = window.location.origin
+    const { data: checkoutData } = await $fetch('/api/create-checkout', {
+      method: 'POST',
+      body: {
+        orderData: {
+          id: orderData[0].id,
+          email: form.value.email,
+          product_name: selectedProduct.name,
+          country_name: form.value.countryName,
+          quantity: form.value.quantity
+        },
+        returnUrl: currentUrl
+      }
+    })
+
+    if (checkoutData?.checkout_url) {
+      // Update order with Stripe checkout URL
+      await supabase
+        .from('orders')
+        .update({
+          stripe_checkout_url: checkoutData.checkout_url,
+          stripe_session_id: checkoutData.session_id
+        })
+        .eq('id', orderData[0].id)
+
+      // Redirect to Stripe checkout
+      window.location.href = checkoutData.checkout_url
+    } else {
+      throw new Error('Failed to create payment checkout')
     }
 
   } catch (error) {
