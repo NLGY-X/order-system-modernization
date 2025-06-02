@@ -106,24 +106,22 @@ const handleSubmit = async () => {
       throw new Error('Selected product not found')
     }
 
-    const supabase = useSupabase()
-    
-    // Insert the order directly into the database
-    const { data: orderData, error: orderError } = await supabase
-      .from('orders')
-      .insert({
+    // Create order using server-side endpoint (bypasses RLS issues)
+    const { data: orderResponse } = await $fetch('/api/create-order', {
+      method: 'POST',
+      body: {
         email: form.value.email,
-        product_name: selectedProduct.name,
-        country_name: form.value.countryName,
-        quantity: form.value.quantity,
-        status: 'pending'
-      })
-      .select()
+        productName: selectedProduct.name,
+        countryName: form.value.countryName,
+        quantity: form.value.quantity
+      }
+    })
 
-    if (orderError) {
-      throw new Error(`Failed to create order: ${orderError.message}`)
+    if (!orderResponse?.success) {
+      throw new Error('Failed to create order')
     }
 
+    const orderData = orderResponse.order
     console.log('Order created successfully:', orderData)
 
     // Create Stripe checkout session
@@ -132,7 +130,7 @@ const handleSubmit = async () => {
       method: 'POST',
       body: {
         orderData: {
-          id: orderData[0].id,
+          id: orderData.id,
           email: form.value.email,
           product_name: selectedProduct.name,
           country_name: form.value.countryName,
@@ -143,14 +141,15 @@ const handleSubmit = async () => {
     })
 
     if (checkoutData?.checkout_url) {
-      // Update order with Stripe checkout URL
-      await supabase
-        .from('orders')
-        .update({
-          stripe_checkout_url: checkoutData.checkout_url,
-          stripe_session_id: checkoutData.session_id
-        })
-        .eq('id', orderData[0].id)
+      // Update order with Stripe checkout URL (using server endpoint)
+      await $fetch('/api/update-order', {
+        method: 'POST',
+        body: {
+          orderId: orderData.id,
+          stripeCheckoutUrl: checkoutData.checkout_url,
+          stripeSessionId: checkoutData.session_id
+        }
+      })
 
       // Redirect to Stripe checkout
       window.location.href = checkoutData.checkout_url
