@@ -333,19 +333,20 @@ const saveProduct = async () => {
     }
 
     // Update product
-    const { error: updateError } = await supabase
+    const { data: updateData, error: updateError } = await supabase
       .from('products')
       .update({ 
         name: productForm.value.name.trim(),
         description: productForm.value.description?.trim() || null
       })
       .eq('id', productId)
+      .select() // Add select to return the updated data
 
     if (updateError) throw updateError
 
-    // Only update pricing if user checked the box
+    // Only update pricing if checkbox is checked
     if (updatePricing.value) {
-      // Delete existing pricing data
+      // Delete existing prices for this product
       const { error: deleteError } = await supabase
         .from('product_prices')
         .delete()
@@ -353,47 +354,50 @@ const saveProduct = async () => {
 
       if (deleteError) throw deleteError
 
-      // Insert new pricing data
-      const pricingData = []
-      
-      // Map form field names to database tier names
-      const tierMapping = {
-        'global': 'GLOBAL',
-        'tier1': 'TIER1', 
-        'tier2': 'TIER2',
-        'tier3': 'TIER3'
-      }
-      
-      quantityTiers.forEach((tier, index) => {
-        const tierPricing = productForm.value.pricing[index]
-        
-        Object.entries(tierPricing).forEach(([pppTier, price]) => {
-          if (price > 0) {
-            pricingData.push({
+      // Insert new prices
+      const pricesToInsert = []
+
+      // Convert form data to database format
+      productForm.value.pricing.forEach((tier, tierIndex) => {
+        const tierSizes = ['1', '5', '20', '50'] // quantity_tier values
+        const tierSize = tierSizes[tierIndex]
+
+        // Map form field names to database ppp_tier values
+        const pppMapping = {
+          'global': 'global',
+          'tier1': 'tier_1', 
+          'tier2': 'tier_2',
+          'tier3': 'tier_3'
+        }
+
+        Object.entries(pppMapping).forEach(([formField, dbTier]) => {
+          if (tier[formField] > 0) {
+            pricesToInsert.push({
               product_id: productId,
-              quantity_tier: tier,
-              ppp_tier: tierMapping[pppTier],
-              price: price
+              quantity_tier: tierSize,
+              ppp_tier: dbTier,
+              price: tier[formField]
             })
           }
         })
       })
 
-      if (pricingData.length > 0) {
-        const { error: pricingError } = await supabase
+      if (pricesToInsert.length > 0) {
+        const { error: insertError } = await supabase
           .from('product_prices')
-          .insert(pricingData)
+          .insert(pricesToInsert)
 
-        if (pricingError) throw pricingError
+        if (insertError) throw insertError
       }
     }
 
-    // Success - redirect to products page
+    alert('Product updated successfully!')
+    
+    // Navigate back to products list
     await navigateTo('/admin/products')
-
   } catch (error) {
-    console.error('Error updating product:', error)
-    alert('Failed to update product. Please try again.')
+    console.error('Error saving product:', error)
+    alert('Failed to save product: ' + error.message)
   } finally {
     saving.value = false
   }

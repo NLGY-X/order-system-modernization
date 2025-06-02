@@ -76,6 +76,18 @@
             Analytics
           </NuxtLink>
 
+          <!-- Admin Users -->
+          <NuxtLink
+            to="/admin/users"
+            class="flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            :class="{ 'bg-blue-50 text-blue-700 border-r-2 border-blue-600': $route.path.startsWith('/admin/users') }"
+          >
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+            </svg>
+            Admin Users
+          </NuxtLink>
+
           <!-- Settings -->
           <NuxtLink
             to="/admin/settings"
@@ -184,6 +196,7 @@ const pageTitle = computed(() => {
   if (path.startsWith('/admin/products')) return 'Products'
   if (path.startsWith('/admin/countries')) return 'Countries & PPP'
   if (path.startsWith('/admin/analytics')) return 'Analytics'
+  if (path.startsWith('/admin/users')) return 'Admin Users'
   if (path.startsWith('/admin/settings')) return 'Settings'
   
   return 'Admin Panel'
