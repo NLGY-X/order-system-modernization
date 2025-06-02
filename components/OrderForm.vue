@@ -107,7 +107,7 @@ const handleSubmit = async () => {
     }
 
     // Create order using server-side endpoint (bypasses RLS issues)
-    const { data: orderResponse } = await $fetch('/api/create-order', {
+    const orderResponse = await $fetch('/api/create-order', {
       method: 'POST',
       body: {
         email: form.value.email,
@@ -118,7 +118,7 @@ const handleSubmit = async () => {
     })
 
     if (!orderResponse?.success) {
-      throw new Error('Failed to create order')
+      throw new Error(orderResponse?.error || 'Failed to create order')
     }
 
     const orderData = orderResponse.order
@@ -126,7 +126,7 @@ const handleSubmit = async () => {
 
     // Create Stripe checkout session
     const currentUrl = window.location.origin
-    const { data: checkoutData } = await $fetch('/api/create-checkout', {
+    const checkoutResponse = await $fetch('/api/create-checkout', {
       method: 'POST',
       body: {
         orderData: {
@@ -140,19 +140,19 @@ const handleSubmit = async () => {
       }
     })
 
-    if (checkoutData?.checkout_url) {
+    if (checkoutResponse?.checkout_url) {
       // Update order with Stripe checkout URL (using server endpoint)
       await $fetch('/api/update-order', {
         method: 'POST',
         body: {
           orderId: orderData.id,
-          stripeCheckoutUrl: checkoutData.checkout_url,
-          stripeSessionId: checkoutData.session_id
+          stripeCheckoutUrl: checkoutResponse.checkout_url,
+          stripeSessionId: checkoutResponse.session_id
         }
       })
 
       // Redirect to Stripe checkout
-      window.location.href = checkoutData.checkout_url
+      window.location.href = checkoutResponse.checkout_url
     } else {
       throw new Error('Failed to create payment checkout')
     }
