@@ -101,15 +101,13 @@ export const useAdminAuth = () => {
   // Signup function for admin users (only for invited users)
   const signup = async (email, password) => {
     try {
-      // Check if this email is in admin_users table as pending
-      const { data: adminData, error: adminError } = await supabase
-        .from('admin_users')
-        .select('*')
-        .eq('email', email)
-        .eq('status', 'pending')
-        .single()
+      // Check if this email is invited as pending admin using our secure function
+      const { data: isPending, error: checkError } = await supabase
+        .rpc('is_pending_admin', { user_email: email })
 
-      if (adminError || !adminData) {
+      if (checkError) throw checkError
+
+      if (!isPending) {
         throw new Error('You must be invited as an admin user before you can sign up.')
       }
 
@@ -122,16 +120,14 @@ export const useAdminAuth = () => {
       if (error) throw error
 
       if (data.user) {
-        // Link the auth user to admin_users record
-        const { error: updateError } = await supabase
-          .from('admin_users')
-          .update({ 
-            auth_id: data.user.id,
-            status: 'active'
+        // Activate the pending admin user using our secure function
+        const { error: activateError } = await supabase
+          .rpc('activate_pending_admin', { 
+            user_id: data.user.id, 
+            user_email: email 
           })
-          .eq('id', adminData.id)
 
-        if (updateError) throw updateError
+        if (activateError) throw activateError
 
         return { 
           success: true, 
@@ -149,15 +145,13 @@ export const useAdminAuth = () => {
   // Setup first super admin (one-time setup)
   const setupFirstAdmin = async (email, password) => {
     try {
-      // Check if there are any active admin users
-      const { data: existingAdmins, error: checkError } = await supabase
-        .from('admin_users')
-        .select('id')
-        .eq('status', 'active')
+      // Check if there are any active admin users using our secure function
+      const { data: hasActiveAdmins, error: checkError } = await supabase
+        .rpc('has_active_admin_users')
 
       if (checkError) throw checkError
 
-      if (existingAdmins && existingAdmins.length > 0) {
+      if (hasActiveAdmins) {
         throw new Error('Admin users already exist. Use the normal login process.')
       }
 
@@ -170,16 +164,14 @@ export const useAdminAuth = () => {
       if (error) throw error
 
       if (data.user) {
-        // Update the existing admin_users record with auth_id and activate it
-        const { error: updateError } = await supabase
-          .from('admin_users')
-          .update({ 
-            auth_id: data.user.id,
-            status: 'active'
+        // Setup the first admin using our secure function
+        const { error: setupError } = await supabase
+          .rpc('setup_first_admin', { 
+            user_id: data.user.id, 
+            user_email: email 
           })
-          .eq('email', email)
 
-        if (updateError) throw updateError
+        if (setupError) throw setupError
 
         return { 
           success: true, 
