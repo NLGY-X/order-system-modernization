@@ -8,5 +8,5 @@
 </template>
 
 <script setup>
-// No debugging code needed in production
+const route = useRoute()
 </script>
