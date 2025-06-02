@@ -355,6 +355,15 @@ const saveProduct = async () => {
 
       // Insert new pricing data
       const pricingData = []
+      
+      // Map form field names to database tier names
+      const tierMapping = {
+        'global': 'GLOBAL',
+        'tier1': 'TIER1', 
+        'tier2': 'TIER2',
+        'tier3': 'TIER3'
+      }
+      
       quantityTiers.forEach((tier, index) => {
         const tierPricing = productForm.value.pricing[index]
         
@@ -363,7 +372,7 @@ const saveProduct = async () => {
             pricingData.push({
               product_id: productId,
               quantity_tier: tier,
-              ppp_tier: pppTier.toUpperCase(),
+              ppp_tier: tierMapping[pppTier],
               price: price
             })
           }
