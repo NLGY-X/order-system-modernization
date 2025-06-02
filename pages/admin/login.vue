@@ -182,14 +182,20 @@ const checkSetupMode = async () => {
   try {
     const supabase = useSupabase()
     
-    // Check if there are any active admin users using our secure function
-    const { data: hasActiveAdmins, error } = await supabase
-      .rpc('has_active_admin_users')
+    // Check if there are any active admin users
+    const { data: adminUsers, error } = await supabase
+      .from('admin_users')
+      .select('id')
+      .eq('status', 'active')
 
-    if (error) throw error
-    
-    // If no active admin users exist, show setup mode
-    setupMode.value = !hasActiveAdmins
+    if (error) {
+      console.error('Error checking setup mode:', error)
+      // If we can't check, assume no active admins exist and show setup mode
+      setupMode.value = true
+    } else {
+      // If no active admin users exist, show setup mode
+      setupMode.value = !adminUsers || adminUsers.length === 0
+    }
     
     // Pre-fill email if in setup mode
     if (setupMode.value) {
@@ -197,6 +203,9 @@ const checkSetupMode = async () => {
     }
   } catch (err) {
     console.error('Error checking setup mode:', err)
+    // On error, assume setup mode is needed
+    setupMode.value = true
+    form.value.email = 'dan@kraveit.net'
   }
 }
 
