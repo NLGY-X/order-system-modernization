@@ -178,13 +178,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 // Sidebar state
 const sidebarOpen = ref(false)
 
 // Auth
-const { adminUser, logout } = useAdminAuth()
+const { adminUser, logout, initAuth } = useAdminAuth()
+
+// Initialize auth on mount
+onMounted(async () => {
+  await initAuth()
+})
 
 // Page title based on route
 const pageTitle = computed(() => {
