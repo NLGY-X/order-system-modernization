@@ -8,6 +8,7 @@ export const useAdminAuth = () => {
 
   // Initialize auth state from Supabase session
   const initAuth = async () => {
+    console.log('[useAdminAuth] Attempting REFACTORED initAuth - using API call to /api/auth/verify-admin-status'); // DIAGNOSTIC LOG
     if (process.client) {
       adminUser.value = null; // Reset initially
       adminToken.value = null; // Reset initially
@@ -74,6 +75,7 @@ export const useAdminAuth = () => {
 
   // Login function using Supabase Auth
   const login = async (email, password) => {
+    console.log('[useAdminAuth] Attempting REFACTORED login - using API call to /api/auth/verify-admin-status'); // DIAGNOSTIC LOG
     try {
       // Sign in with Supabase Auth
       const { data, error } = await supabase.auth.signInWithPassword({
