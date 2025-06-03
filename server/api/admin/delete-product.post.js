@@ -11,6 +11,7 @@ export default defineEventHandler(async (event) => {
 
   // --- AUTHENTICATION/AUTHORIZATION --- 
   const token = getHeader(event, 'authorization')?.split(' ')[1]
+  console.log('Delete Product API - Received Token:', token ? 'Token Present' : 'Token MISSING');
   if (!token) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized: Missing token' })
   }
@@ -26,6 +27,8 @@ export default defineEventHandler(async (event) => {
   })
 
   const { data: { user }, error: authError } = await supabaseUserClient.auth.getUser()
+  console.log('Delete Product API - Auth Error:', authError);
+  console.log('Delete Product API - User from Token:', user);
   if (authError || !user) {
     throw createError({ statusCode: 401, statusMessage: 'Unauthorized: Invalid or expired token' })
   }
