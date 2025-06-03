@@ -125,6 +125,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useAdminAuthV2 } from '~/composables/useAdminAuthV2.js'
 
 // Protect this route with admin auth and set layout
 definePageMeta({
@@ -145,8 +146,7 @@ const loading = ref(true)
 const products = ref([])
 const pricing = ref([])
 const orders = ref([])
-
-
+const { adminToken } = useAdminAuthV2()
 
 // Load all data
 const loadData = async () => {
@@ -211,8 +211,6 @@ const getProductStats = (productId) => {
   }
 }
 
-
-
 // Delete product - FIXED VERSION
 const deleteProduct = async (productId) => {
   if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
@@ -223,6 +221,9 @@ const deleteProduct = async (productId) => {
     // Use the new API endpoint that bypasses RLS
     const response = await $fetch('/api/admin/delete-product', {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${adminToken.value}`
+      },
       body: { productId }
     })
 
