@@ -6,11 +6,7 @@
         <div class="flex justify-between items-center h-16">
           <div class="flex items-center">
             <div class="flex-shrink-0 flex items-center">
-              <div class="w-8 h-8 bg-blue-500 rounded-lg mr-3 flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
+              <img src="/logo.jpg" alt="certificates.dev" class="w-8 h-8 rounded-lg mr-3 object-cover" />
               <span class="text-xl font-bold text-white">certificates.dev</span>
             </div>
           </div>
@@ -92,11 +88,7 @@
                   <div class="flex items-center justify-between mb-4">
                     <h3 class="text-white font-semibold">Partner Order Summary</h3>
                     <div class="flex space-x-2">
-                      <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                      </div>
+                      <img src="/logo.jpg" alt="certificates.dev" class="w-8 h-8 rounded-lg object-cover" />
                       <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
                         <span class="text-white text-xs font-bold">JS</span>
                       </div>
@@ -472,11 +464,7 @@
         <div class="grid md:grid-cols-4 gap-8">
           <div>
             <div class="flex items-center mb-4">
-              <div class="w-8 h-8 bg-blue-500 rounded-lg mr-3 flex items-center justify-center">
-                <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-              </div>
+              <img src="/logo.jpg" alt="certificates.dev" class="w-8 h-8 rounded-lg mr-3 object-cover" />
               <span class="text-xl font-bold text-white">certificates.dev</span>
             </div>
             <p class="text-gray-400">Professional developer certifications for the modern world.</p>
