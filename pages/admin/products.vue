@@ -124,9 +124,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useAdminAuthV2 } from '~/composables/useAdminAuthV2.js'
 import { calculateProductPricing, calculateProductStats } from '~/utils/productCalculations.js'
+import { useToast } from '~/composables/useToast.js'
 
 // Protect this route with admin auth and set layout
 definePageMeta({
@@ -141,6 +142,9 @@ useHead({
     { name: 'robots', content: 'noindex, nofollow' }
   ]
 })
+
+// Toast notifications
+const { success, error, info } = useToast()
 
 // Data
 const loading = ref(true)
@@ -193,11 +197,17 @@ const getProductStats = (productId) => {
 
 // Delete product - FIXED VERSION
 const deleteProduct = async (productId) => {
-  if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
+  // Find product name for better messaging
+  const product = products.value.find(p => p.id === productId)
+  const productName = product?.name || 'Unknown Product'
+  
+  if (!confirm(`Are you sure you want to delete "${productName}"? This action cannot be undone.`)) {
     return
   }
 
   try {
+    info('Deleting Product', `Removing "${productName}"...`)
+    
     // Use the new API endpoint that bypasses RLS
     console.log('[deleteProduct] Token being sent:', adminToken.value);
     const response = await $fetch('/api/admin/delete-product', {
@@ -209,6 +219,7 @@ const deleteProduct = async (productId) => {
     })
 
     if (response.success) {
+      success('Product Deleted', `"${productName}" has been successfully removed.`)
       console.log('Product deleted successfully!')
       // Refresh data to remove from UI
       await loadData()
@@ -216,9 +227,9 @@ const deleteProduct = async (productId) => {
       throw new Error(response.message || 'Failed to delete product')
     }
 
-  } catch (error) {
-    console.error('Error deleting product:', error)
-    alert(`Failed to delete product: ${error.message}`)
+  } catch (err) {
+    console.error('Error deleting product:', err)
+    error('Delete Failed', `Could not delete "${productName}": ${err.message}`)
   }
 }
 

@@ -245,7 +245,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+import { useToast } from '~/composables/useToast.js'
 
 // Protect this route with admin auth
 definePageMeta({
@@ -254,11 +255,14 @@ definePageMeta({
 
 // Set page metadata
 useHead({
-  title: 'Dashboard - Admin Panel',
+  title: 'Admin Dashboard',
   meta: [
     { name: 'robots', content: 'noindex, nofollow' }
   ]
 })
+
+// Toast notifications
+const { success, error, info } = useToast()
 
 // Data
 const loading = ref(true)
@@ -324,9 +328,16 @@ const loadDashboardData = async () => {
 }
 
 // Refresh dashboard data
-const refreshDashboard = () => {
-  console.log('Refreshing dashboard data...')
-  loadDashboardData()
+const refreshDashboard = async () => {
+  try {
+    info('Refreshing Dashboard', 'Loading latest data...')
+    console.log('Refreshing dashboard data...')
+    await loadDashboardData()
+    success('Dashboard Updated', 'All data has been refreshed successfully.')
+  } catch (error) {
+    console.error('Error refreshing dashboard:', error)
+    error('Refresh Failed', 'Could not refresh dashboard data. Please try again.')
+  }
 }
 
 // Utility functions
