@@ -126,6 +126,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAdminAuthV2 } from '~/composables/useAdminAuthV2.js'
+import { calculateProductPricing, calculateProductStats } from '~/utils/productCalculations.js'
 
 // Protect this route with admin auth and set layout
 definePageMeta({
@@ -180,35 +181,14 @@ const loadData = async () => {
   }
 }
 
-// Get pricing for a product
+// Get pricing for a product - now using utility function
 const getProductPricing = (productId) => {
-  const productPricing = pricing.value.filter(p => p.product_id === productId)
-  
-  // Group by quantity ranges and return simplified structure
-  const grouped = {}
-  productPricing.forEach(p => {
-    const key = `${p.min_quantity}-${p.max_quantity || '+'}`
-    if (!grouped[key]) {
-      grouped[key] = { quantity_tier: key, price: p.price_usd }
-    }
-  })
-  
-  return Object.values(grouped)
+  return calculateProductPricing(productId, pricing.value)
 }
 
-// Get product statistics
+// Get product statistics - now using utility function
 const getProductStats = (productId) => {
-  // Find the product name first
-  const product = products.value.find(p => p.id === productId)
-  if (!product) return { orders: 0, revenue: 0 }
-  
-  const productOrders = orders.value.filter(o => o.product_name === product.name)
-  return {
-    orders: productOrders.length,
-    revenue: productOrders
-      .filter(o => o.status === 'completed')
-      .reduce((sum, o) => sum + (o.total_price_usd || 0), 0)
-  }
+  return calculateProductStats(productId, products.value, orders.value)
 }
 
 // Delete product - FIXED VERSION
