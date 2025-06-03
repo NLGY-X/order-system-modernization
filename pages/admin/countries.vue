@@ -79,10 +79,10 @@
               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="">All Tiers</option>
-              <option value="GLOBAL">Global</option>
-              <option value="TIER1">Tier 1</option>
-              <option value="TIER2">Tier 2</option>
-              <option value="TIER3">Tier 3</option>
+              <option value="Global">Global</option>
+              <option value="Tier 1">Tier 1</option>
+              <option value="Tier 2">Tier 2</option>
+              <option value="Tier 3">Tier 3</option>
             </select>
           </div>
 
@@ -300,10 +300,10 @@
                   class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 >
                   <option value="">Select PPP Tier</option>
-                  <option value="GLOBAL">Global (0% discount)</option>
-                  <option value="TIER1">Tier 1 (20% discount)</option>
-                  <option value="TIER2">Tier 2 (35% discount)</option>
-                  <option value="TIER3">Tier 3 (50% discount)</option>
+                  <option value="Global">Global (0% discount)</option>
+                  <option value="Tier 1">Tier 1 (20% discount)</option>
+                  <option value="Tier 2">Tier 2 (35% discount)</option>
+                  <option value="Tier 3">Tier 3 (50% discount)</option>
                 </select>
               </div>
 
@@ -382,9 +382,21 @@ const filteredCountries = computed(() => {
     searchFilter: filters.value.search
   })
 
+  // Log actual ppp_tier values from database
+  const uniqueTiers = [...new Set(countries.value.map(c => c.ppp_tier))]
+  console.log('Actual ppp_tier values in database:', uniqueTiers)
+  console.log('Sample countries with their tiers:', countries.value.slice(0, 5).map(c => ({ name: c.country_name, tier: c.ppp_tier })))
+
   // PPP Tier filter
   if (filters.value.pppTier) {
-    filtered = filtered.filter(country => country.ppp_tier === filters.value.pppTier)
+    console.log('Filtering for tier:', filters.value.pppTier)
+    filtered = filtered.filter(country => {
+      const match = country.ppp_tier === filters.value.pppTier
+      if (!match) {
+        console.log(`No match: "${country.ppp_tier}" !== "${filters.value.pppTier}"`)
+      }
+      return match
+    })
     console.log('After PPP tier filter:', filtered.length)
   }
 
@@ -455,13 +467,13 @@ const loadData = async () => {
 // Get tier color
 const getTierColor = (tier) => {
   switch (tier) {
-    case 'GLOBAL':
+    case 'Global':
       return 'bg-gray-100 text-gray-800'
-    case 'TIER1':
+    case 'Tier 1':
       return 'bg-blue-100 text-blue-800'
-    case 'TIER2':
+    case 'Tier 2':
       return 'bg-green-100 text-green-800'
-    case 'TIER3':
+    case 'Tier 3':
       return 'bg-purple-100 text-purple-800'
     default:
       return 'bg-gray-100 text-gray-800'
@@ -471,13 +483,13 @@ const getTierColor = (tier) => {
 // Get tier discount
 const getTierDiscount = (tier) => {
   switch (tier) {
-    case 'GLOBAL':
+    case 'Global':
       return '0%'
-    case 'TIER1':
+    case 'Tier 1':
       return '20%'
-    case 'TIER2':
+    case 'Tier 2':
       return '35%'
-    case 'TIER3':
+    case 'Tier 3':
       return '50%'
     default:
       return 'N/A'
