@@ -23,6 +23,23 @@
         </p>
       </div>
 
+      <!-- Database Connection Warning -->
+      <div v-if="usingMockData" class="max-w-md mx-auto mb-8">
+        <div class="bg-red-50 border border-red-200 rounded-md p-4">
+          <div class="flex items-center">
+            <svg class="h-5 w-5 text-red-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 15c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <div>
+              <h3 class="text-red-800 font-medium text-sm">Database Connection Issue</h3>
+              <p class="text-red-700 text-xs mt-1">
+                Unable to load products from database. Showing demo products only.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Loading State -->
       <div v-if="pending" class="flex items-center justify-center py-12">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -132,11 +149,13 @@ const config = useRuntimeConfig()
 const data = ref(null)
 const pending = ref(true)
 const error = ref(null)
+const usingMockData = ref(false)
 
 const fetchFormData = async () => {
   try {
     pending.value = true
     error.value = null
+    usingMockData.value = false
 
     const supabase = useSupabase()
 
@@ -147,20 +166,24 @@ const fetchFormData = async () => {
     ])
 
     if (productsResult.error) {
+      console.error('Products query error:', productsResult.error)
       // Use mock data instead of throwing error
       data.value = {
         products: mockProducts,
         countries: mockCountries
       }
+      usingMockData.value = true
       return
     }
 
     if (countriesResult.error) {
+      console.error('Countries query error:', countriesResult.error)
       // Use mock data instead of throwing error
       data.value = {
         products: mockProducts,
         countries: mockCountries
       }
+      usingMockData.value = true
       return
     }
 
@@ -175,14 +198,17 @@ const fetchFormData = async () => {
         products: mockProducts,
         countries: mockCountries
       }
+      usingMockData.value = true
     }
 
   } catch (err) {
+    console.error('Fetch error:', err)
     // Use mock data as fallback
     data.value = {
       products: mockProducts,
       countries: mockCountries
     }
+    usingMockData.value = true
     error.value = err
   } finally {
     pending.value = false
