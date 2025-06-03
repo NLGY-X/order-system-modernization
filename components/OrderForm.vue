@@ -1,15 +1,14 @@
 <template>
-  <div class="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Place Your Order</h2>
-    
+  <div class="w-full">
     <SubmissionStatus :status="submissionStatus" :error-message="errorMessage" />
     
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmit" class="space-y-8">
       <SelectInput
         v-model="form.productId"
         label="Certification Package"
         :options="products"
         placeholder="Choose a certification package"
+        class="form-field"
       />
       
       <SelectInput
@@ -17,6 +16,7 @@
         label="Country of Sale"
         :options="countries"
         placeholder="Select your country"
+        class="form-field"
       />
       
       <NumberInput
@@ -24,6 +24,7 @@
         label="Quantity"
         placeholder="Enter quantity"
         :min="1"
+        class="form-field"
       />
       
       <TextInput
@@ -31,14 +32,27 @@
         label="Email Address"
         type="email"
         placeholder="your.email@example.com"
+        class="form-field"
       />
       
       <button
         type="submit"
         :disabled="submissionStatus === 'loading' || !isFormValid"
-        class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+        class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 disabled:from-gray-600 disabled:to-gray-700 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
       >
-        {{ submissionStatus === 'loading' ? 'Processing...' : 'Submit Order' }}
+        <span v-if="submissionStatus === 'loading'" class="flex items-center justify-center">
+          <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          Processing Order...
+        </span>
+        <span v-else class="flex items-center justify-center">
+          <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+          Proceed to Checkout
+        </span>
       </button>
     </form>
   </div>

@@ -1,13 +1,13 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-3xl mx-auto">
+  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
       <!-- Header -->
       <div class="text-center mb-12 relative">
         <!-- Admin Login Link -->
         <div class="absolute top-0 right-0">
           <NuxtLink 
             to="/admin/login"
-            class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 hover:bg-gray-700 rounded-md shadow-sm transition-colors"
+            class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-gray-800/50 hover:bg-gray-700/70 rounded-lg shadow-sm transition-all duration-200 backdrop-blur-sm border border-gray-700"
             title="Admin Access"
           >
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -17,22 +17,29 @@
           </NuxtLink>
         </div>
 
-        <h1 class="text-4xl font-bold text-gray-900 mb-4">Order System</h1>
-        <p class="text-lg text-gray-600">
-          Place your certification order with our streamlined ordering system
-        </p>
+        <div class="mb-8">
+          <h1 class="text-5xl font-bold text-white mb-6">
+            Order Your 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+              Certification
+            </span>
+          </h1>
+          <p class="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            Validate your skills with industry-recognized certifications. Choose from our comprehensive range of developer certification packages.
+          </p>
+        </div>
       </div>
 
       <!-- Database Connection Warning -->
-      <div v-if="usingMockData" class="max-w-md mx-auto mb-8">
-        <div class="bg-red-50 border border-red-200 rounded-md p-4">
+      <div v-if="usingMockData" class="max-w-2xl mx-auto mb-8">
+        <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4 backdrop-blur-sm">
           <div class="flex items-center">
-            <svg class="h-5 w-5 text-red-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-5 w-5 text-red-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 15c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
             <div>
-              <h3 class="text-red-800 font-medium text-sm">Database Connection Issue</h3>
-              <p class="text-red-700 text-xs mt-1">
+              <h3 class="text-red-300 font-medium text-sm">Database Connection Issue</h3>
+              <p class="text-red-400 text-xs mt-1">
                 Unable to load products from database. Showing demo products only.
               </p>
             </div>
@@ -41,67 +48,85 @@
       </div>
 
       <!-- Loading State -->
-      <div v-if="pending" class="flex items-center justify-center py-12">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <span class="ml-3 text-lg text-gray-600">Loading form data...</span>
+      <div v-if="pending" class="flex items-center justify-center py-16">
+        <div class="text-center">
+          <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-400 mx-auto mb-4"></div>
+          <span class="text-lg text-gray-300">Loading certification packages...</span>
+        </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error && !data" class="max-w-md mx-auto">
-        <div class="bg-red-50 border border-red-200 rounded-md p-6">
+      <div v-else-if="error && !data" class="max-w-2xl mx-auto">
+        <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-8 backdrop-blur-sm">
           <div class="flex items-center">
-            <svg class="h-6 w-6 text-red-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-8 w-8 text-red-400 mr-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <h3 class="text-red-800 font-medium">Failed to Load Form Data</h3>
-              <p class="text-red-700 text-sm mt-1">
+              <h3 class="text-red-300 font-bold text-lg">Failed to Load Certification Packages</h3>
+              <p class="text-red-400 mt-2">
                 Unable to load products and countries. Please refresh the page to try again.
               </p>
             </div>
           </div>
           <button 
             @click="refresh()"
-            class="mt-4 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+            class="mt-6 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors duration-200 shadow-lg"
           >
-            Retry
+            Retry Loading
           </button>
         </div>
       </div>
 
       <!-- Order Form -->
-      <OrderForm 
-        v-else
-        :products="data?.products || []" 
-        :countries="data?.countries || []" 
-      />
+      <div v-else class="max-w-2xl mx-auto">
+        <div class="bg-gray-800/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-700/50 p-8">
+          <div class="mb-8 text-center">
+            <h2 class="text-2xl font-bold text-white mb-2">Select Your Certification Package</h2>
+            <p class="text-gray-400">Choose your certification, country, and quantity to get started</p>
+          </div>
+          
+          <OrderForm 
+            :products="data?.products || []" 
+            :countries="data?.countries || []" 
+          />
+        </div>
+      </div>
 
       <!-- Footer -->
-      <div class="mt-16 text-center">
-        <div class="border-t border-gray-200 pt-8">
-          <p class="text-sm text-gray-500 mb-4">
-            Need help? Contact support or access the admin panel for management functions.
+      <div class="mt-20 text-center">
+        <div class="border-t border-gray-700/50 pt-12">
+          <p class="text-gray-400 mb-8 text-lg">
+            Need assistance? Our team is here to help with your certification journey.
           </p>
-          <!-- Enhanced Admin Access -->
-          <div class="flex justify-center space-x-6">
+          
+          <!-- Enhanced Support Section -->
+          <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8">
             <NuxtLink 
               to="/admin/login" 
-              class="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-md transition-colors"
+              class="group inline-flex items-center px-6 py-3 text-sm font-medium text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 border border-blue-500/30 rounded-lg transition-all duration-200 backdrop-blur-sm"
             >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
-              Admin Panel
+              Admin Dashboard
             </NuxtLink>
+            
             <a 
               href="mailto:team@certificates.dev" 
-              class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-md transition-colors"
+              class="group inline-flex items-center px-6 py-3 text-sm font-medium text-gray-300 bg-gray-800/50 hover:bg-gray-700/70 border border-gray-600/50 rounded-lg transition-all duration-200 backdrop-blur-sm"
             >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.93a1.78 1.78 0 001.76 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               Contact Support
             </a>
+          </div>
+          
+          <div class="mt-8 pt-8 border-t border-gray-800/50">
+            <p class="text-gray-500 text-sm">
+              © 2025 Certificates.dev - Professional Developer Certifications
+            </p>
           </div>
         </div>
       </div>
