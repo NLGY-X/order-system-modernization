@@ -39,6 +39,12 @@ export default defineEventHandler(async (event) => {
       .eq('status', 'active')
       .single()
 
+    // Log the raw adminRecord and its status for detailed inspection
+    console.log('Fetched adminRecord for auth_id', user.id, ':', JSON.stringify(adminRecord));
+    if (adminRecord) {
+      console.log('Type of adminRecord.status:', typeof adminRecord.status, '; Value:', "'" + adminRecord.status + "'");
+    }
+
     if (adminCheckError) {
       // If error is "PGRST116" (single row not found), it means user is not an admin or not active.
       // This is not a server error, but an expected outcome for non-admins.
@@ -55,15 +61,19 @@ export default defineEventHandler(async (event) => {
       return { isAdmin: false, message: 'Admin record not found or not active.' }
     }
 
-    // User is an active admin
-    return { 
-      isAdmin: true, 
-      adminUser: { // Return the necessary admin user details for the client-side composable
-        id: adminRecord.id,
-        email: adminRecord.email, // Ensure email is selected if needed by useAdminAuth
-        role: adminRecord.role,
-        auth_id: adminRecord.auth_id
-      } 
+    // 6. Check if admin user was found and is active
+    if (adminRecord && adminRecord.status === 'active') {
+      console.log('Admin status verified for user:', adminRecord.email, 'Status:', adminRecord.status);
+      // User is an active admin
+      return { 
+        isAdmin: true, 
+        adminUser: { // Return the necessary admin user details for the client-side composable
+          id: adminRecord.id,
+          email: adminRecord.email, // Ensure email is selected if needed by useAdminAuth
+          role: adminRecord.role,
+          auth_id: adminRecord.auth_id
+        } 
+      }
     }
 
   } catch (error) {
