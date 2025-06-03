@@ -19,6 +19,9 @@
               <a href="#features" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</a>
               <a href="#pricing" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Pricing</a>
               <a href="#contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+              <NuxtLink to="/order" class="text-blue-300 hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-colors border border-blue-500/30 bg-blue-900/20">
+                Partner Login
+              </NuxtLink>
               <NuxtLink to="/admin/login" class="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md text-sm font-medium transition-colors border border-red-500 shadow-lg">
                 <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -30,6 +33,9 @@
           </div>
           <!-- Mobile menu button and admin link -->
           <div class="md:hidden flex items-center space-x-2">
+            <NuxtLink to="/order" class="text-blue-300 hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition-colors border border-blue-500/30 bg-blue-900/20">
+              Partner
+            </NuxtLink>
             <NuxtLink to="/admin/login" class="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md text-sm font-medium transition-colors border border-red-500 shadow-lg">
               <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -464,10 +470,13 @@
           <NuxtLink to="/signup" class="bg-white hover:bg-gray-100 text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg">
             Apply for Partnership
           </NuxtLink>
-          <a href="#features" class="border-2 border-white text-white hover:bg-white hover:text-blue-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors">
-            Learn More
-          </a>
+          <NuxtLink to="/order" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg border-2 border-blue-400">
+            Partner Login & Orders
+          </NuxtLink>
         </div>
+        <p class="text-blue-200 text-sm mt-4">
+          Already a partner? <NuxtLink to="/order" class="underline hover:text-white">Access your order system here</NuxtLink>
+        </p>
       </div>
     </section>
 
