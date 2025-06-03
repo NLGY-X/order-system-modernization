@@ -1,15 +1,10 @@
 <template>
   <div class="min-h-screen bg-gray-50">
-    <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
+    <!-- Sidebar - Always Visible -->
+    <div class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg">
       <!-- Sidebar Header -->
       <div class="flex items-center justify-between h-16 px-6 bg-blue-600">
         <h1 class="text-xl font-semibold text-white">Admin Panel</h1>
-        <button @click="sidebarOpen = false" class="text-white hover:text-gray-200 lg:hidden">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
       </div>
 
       <!-- Navigation -->
@@ -118,27 +113,20 @@
       </nav>
     </div>
 
-    <!-- Main Content -->
-    <div class="lg:ml-64">
+    <!-- Main Content - Always with left margin for sidebar -->
+    <div class="ml-64">
       <!-- Top Header -->
       <header class="bg-white shadow-sm border-b border-gray-200">
         <div class="flex items-center justify-between h-16 px-6">
-          <!-- Mobile menu button -->
-          <button @click="sidebarOpen = true" class="text-gray-500 hover:text-gray-700 lg:hidden">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-
           <!-- Page Title -->
-          <div class="flex-1 lg:flex-none">
+          <div class="flex-1">
             <h1 class="text-2xl font-semibold text-gray-900">{{ pageTitle }}</h1>
           </div>
 
           <!-- User Menu -->
           <div class="flex items-center space-x-4">
             <!-- User Info -->
-            <div class="hidden md:flex items-center space-x-3">
+            <div class="flex items-center space-x-3">
               <div class="text-right">
                 <p class="text-sm font-medium text-gray-900">{{ adminUser?.email }}</p>
                 <p class="text-xs text-gray-500 capitalize">{{ adminUser?.role?.replace('_', ' ') }}</p>
@@ -197,13 +185,6 @@
       </main>
     </div>
 
-    <!-- Mobile Sidebar Overlay -->
-    <div
-      v-if="sidebarOpen"
-      @click="sidebarOpen = false"
-      class="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
-    ></div>
-
     <!-- Toast Notifications -->
     <div class="fixed top-4 right-4 z-50 space-y-2">
       <transition-group name="toast" tag="div">
@@ -253,9 +234,6 @@
 <script setup>
 import { ref, computed, onMounted, provide } from 'vue'
 import { useAdminAuthV2 } from '@/composables/useAdminAuthV2'
-
-// Sidebar state
-const sidebarOpen = ref(false)
 
 // Toast notifications
 const toasts = ref([])
@@ -354,11 +332,6 @@ const breadcrumbs = computed(() => {
 const handleLogout = async () => {
   await logout()
 }
-
-// Close sidebar on route change (mobile)
-watch(() => useRoute().path, () => {
-  sidebarOpen.value = false
-})
 </script>
 
 <style scoped>
