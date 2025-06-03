@@ -1,7 +1,10 @@
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 // import { createClient } from '@supabase/supabase-js' // Not needed if useSupabase is always used
 
-// Supabase client, user, and token refs
+// Supabase client, user, and token refs - HOISTED FOR SINGLETON PATTERN
+const adminUser = ref(null);
+const adminToken = ref(null);
+
 export const useAdminAuthV2 = () => {
   const supabase = useSupabase()
 
@@ -135,8 +138,8 @@ export const useAdminAuthV2 = () => {
   };
 
   // Persisted state for admin user and token
-  const adminUser = ref(null);
-  const adminToken = ref(null);
+  // const adminUser = ref(null); // MOVED OUTSIDE
+  // const adminToken = ref(null); // MOVED OUTSIDE
 
 
   // Utility to check if a user is authenticated (has a token and user object)
