@@ -67,12 +67,15 @@
           </div>
         </div>
 
-        <h1 class="text-4xl font-bold text-white mb-4">
-          Partner Order System
-        </h1>
-        <p class="text-xl text-gray-300 mb-8">
-          Place your certificate orders with automatic partner pricing. All orders include digital delivery and premium support.
-        </p>
+        <!-- Title Section with proper spacing -->
+        <div class="pt-16 sm:pt-12">
+          <h1 class="text-4xl font-bold text-white mb-4">
+            Partner Order System
+          </h1>
+          <p class="text-xl text-gray-300 mb-8">
+            Place your certificate orders with automatic partner pricing. All orders include digital delivery and premium support.
+          </p>
+        </div>
       </div>
 
       <!-- Partner Authentication Gate -->
