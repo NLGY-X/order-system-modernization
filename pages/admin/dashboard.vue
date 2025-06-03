@@ -2,6 +2,30 @@
   <div>
     <!-- Use admin layout -->
     <NuxtLayout name="admin">
+      <!-- Dashboard Header -->
+      <div class="mb-8">
+        <div class="sm:flex sm:items-center sm:justify-between">
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+            <p class="mt-2 text-sm text-gray-700">
+              Overview of your order system performance
+            </p>
+          </div>
+          <div class="mt-4 sm:mt-0">
+            <button
+              @click="refreshDashboard"
+              :disabled="loading"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              Refresh
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Orders -->
@@ -253,7 +277,7 @@ const loadDashboardData = async () => {
 
     // Load stats in parallel
     const [ordersResult, productsResult, countriesResult] = await Promise.all([
-      supabase.from('orders').select('total_price_usd'),
+      supabase.from('orders').select('total_price_usd, status'),
       supabase.from('products').select('id'),
       supabase.from('ppp_classifications').select('id')
     ])
@@ -261,7 +285,10 @@ const loadDashboardData = async () => {
     // Calculate stats
     if (ordersResult.data) {
       stats.value.totalOrders = ordersResult.data.length
-      stats.value.totalRevenue = ordersResult.data.reduce((sum, order) => sum + (order.total_price_usd || 0), 0)
+      // Only count revenue from paid/completed orders
+      stats.value.totalRevenue = ordersResult.data
+        .filter(order => order.status === 'paid' || order.status === 'completed')
+        .reduce((sum, order) => sum + (order.total_price_usd || 0), 0)
     }
 
     if (productsResult.data) {
@@ -283,11 +310,23 @@ const loadDashboardData = async () => {
       recentOrders.value = recentOrdersResult.data
     }
 
+    console.log('Dashboard data loaded:', {
+      totalOrders: stats.value.totalOrders,
+      totalRevenue: stats.value.totalRevenue,
+      activeProducts: stats.value.activeProducts
+    })
+
   } catch (error) {
     console.error('Error loading dashboard data:', error)
   } finally {
     loading.value = false
   }
+}
+
+// Refresh dashboard data
+const refreshDashboard = () => {
+  console.log('Refreshing dashboard data...')
+  loadDashboardData()
 }
 
 // Utility functions
