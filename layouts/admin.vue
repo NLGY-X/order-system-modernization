@@ -164,6 +164,35 @@
 
       <!-- Page Content -->
       <main class="p-6">
+        <!-- Breadcrumb Navigation -->
+        <nav v-if="breadcrumbs.length > 1" class="flex mb-6" aria-label="Breadcrumb">
+          <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li v-for="(breadcrumb, index) in breadcrumbs" :key="breadcrumb.path" class="inline-flex items-center">
+              <!-- Separator (not for first item) -->
+              <svg v-if="index > 0" class="w-3 h-3 text-gray-400 mx-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+              </svg>
+              
+              <!-- Breadcrumb Link/Text -->
+              <NuxtLink
+                v-if="index < breadcrumbs.length - 1"
+                :to="breadcrumb.path"
+                class="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800"
+              >
+                <svg v-if="index === 0" class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                </svg>
+                {{ breadcrumb.name }}
+              </NuxtLink>
+              
+              <!-- Current page (not clickable) -->
+              <span v-else class="inline-flex items-center text-sm font-medium text-gray-500">
+                {{ breadcrumb.name }}
+              </span>
+            </li>
+          </ol>
+        </nav>
+
         <slot />
       </main>
     </div>
@@ -206,6 +235,39 @@ const pageTitle = computed(() => {
   if (path.startsWith('/admin/settings')) return 'Settings'
   
   return 'Admin Panel'
+})
+
+// Breadcrumbs based on route
+const breadcrumbs = computed(() => {
+  const route = useRoute()
+  const path = route.path
+  const crumbs = []
+  
+  // Always start with Dashboard
+  crumbs.push({ name: 'Dashboard', path: '/admin/dashboard' })
+  
+  // Add parent page if on subpage
+  if (path.startsWith('/admin/products-new')) {
+    crumbs.push({ name: 'Products', path: '/admin/products' })
+    crumbs.push({ name: 'Add New Product', path: path })
+  } else if (path.startsWith('/admin/products-edit-')) {
+    crumbs.push({ name: 'Products', path: '/admin/products' })
+    crumbs.push({ name: 'Edit Product', path: path })
+  } else if (path === '/admin/orders') {
+    crumbs.push({ name: 'Orders', path: path })
+  } else if (path === '/admin/products') {
+    crumbs.push({ name: 'Products', path: path })
+  } else if (path === '/admin/countries') {
+    crumbs.push({ name: 'Countries & PPP', path: path })
+  } else if (path === '/admin/analytics') {
+    crumbs.push({ name: 'Analytics', path: path })
+  } else if (path === '/admin/users') {
+    crumbs.push({ name: 'Admin Users', path: path })
+  } else if (path === '/admin/settings') {
+    crumbs.push({ name: 'Settings', path: path })
+  }
+  
+  return crumbs
 })
 
 // Handle logout
