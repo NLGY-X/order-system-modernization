@@ -133,17 +133,32 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Country
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-200">
+                  <div class="flex items-center space-x-1">
+                    <span>Country</span>
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  PPP Tier
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100 transition-colors duration-200">
+                  <div class="flex items-center space-x-1">
+                    <span>PPP Tier</span>
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                    </svg>
+                  </div>
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Discount
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Orders
+                  <div class="flex items-center space-x-1">
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    <span>Orders</span>
+                  </div>
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
@@ -151,45 +166,75 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="country in paginatedCountries" :key="country.id" class="hover:bg-gray-50">
+              <tr v-for="country in paginatedCountries" :key="country.id" class="hover:bg-blue-50 transition-colors duration-150">
                 <!-- Country Name -->
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">
-                    {{ country.country_name }}
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0 w-8 h-8">
+                      <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-semibold">{{ country.country_name.charAt(0) }}</span>
+                      </div>
+                    </div>
+                    <div class="ml-4">
+                      <div class="text-sm font-semibold text-gray-900">
+                        {{ country.country_name }}
+                      </div>
+                    </div>
                   </div>
                 </td>
 
                 <!-- PPP Tier -->
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium" :class="getTierColor(country.ppp_tier)">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" :class="getTierColor(country.ppp_tier)">
+                    <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                    </svg>
                     {{ country.ppp_tier }}
                   </span>
                 </td>
 
                 <!-- Discount -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ getTierDiscount(country.ppp_tier) }}
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <span class="text-sm font-medium text-gray-900">{{ getTierDiscount(country.ppp_tier) }}</span>
+                    <svg v-if="getTierDiscount(country.ppp_tier) !== '0%'" class="w-4 h-4 ml-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    </svg>
+                  </div>
                 </td>
 
                 <!-- Orders Count -->
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {{ getCountryOrderCount(country.country_name) }}
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="flex items-center">
+                    <span class="text-sm font-semibold text-gray-900">{{ getCountryOrderCount(country.country_name) }}</span>
+                    <span v-if="getCountryOrderCount(country.country_name) > 0" class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Active
+                    </span>
+                  </div>
                 </td>
 
                 <!-- Actions -->
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    @click="editCountry(country)"
-                    class="text-blue-600 hover:text-blue-900 mr-3"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    @click="deleteCountry(country.id)"
-                    class="text-red-600 hover:text-red-900"
-                  >
-                    Delete
-                  </button>
+                  <div class="flex items-center space-x-3">
+                    <button
+                      @click="editCountry(country)"
+                      class="inline-flex items-center text-blue-600 hover:text-blue-900 transition-colors duration-200"
+                    >
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                      Edit
+                    </button>
+                    <button
+                      @click="deleteCountry(country.id)"
+                      class="inline-flex items-center text-red-600 hover:text-red-900 transition-colors duration-200"
+                    >
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Delete
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>

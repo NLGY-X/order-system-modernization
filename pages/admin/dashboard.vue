@@ -7,20 +7,28 @@
         <div class="sm:flex sm:items-center sm:justify-between">
           <div>
             <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p class="mt-2 text-sm text-gray-700">
-              Overview of your order system performance
-            </p>
+            <div class="mt-2 flex items-center space-x-4">
+              <p class="text-sm text-gray-700">
+                Overview of your order system performance
+              </p>
+              <div v-if="lastUpdated" class="flex items-center text-xs text-gray-500">
+                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Last updated: {{ formatLastUpdated(lastUpdated) }}
+              </div>
+            </div>
           </div>
           <div class="mt-4 sm:mt-0">
             <button
               @click="refreshDashboard"
               :disabled="loading"
-              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors duration-200"
             >
-              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-4 h-4 mr-2" :class="{ 'animate-spin': loading }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
-              Refresh
+              {{ loading ? 'Refreshing...' : 'Refresh' }}
             </button>
           </div>
         </div>
@@ -273,6 +281,7 @@ const stats = ref({
   totalCountries: 0
 })
 const recentOrders = ref([])
+const lastUpdated = ref(null)
 
 // Load dashboard data
 const loadDashboardData = async () => {
@@ -320,6 +329,9 @@ const loadDashboardData = async () => {
       activeProducts: stats.value.activeProducts
     })
 
+    // Update last updated timestamp
+    lastUpdated.value = new Date()
+
   } catch (error) {
     console.error('Error loading dashboard data:', error)
   } finally {
@@ -362,6 +374,16 @@ const getStatusColor = (status) => {
     default:
       return 'bg-gray-100 text-gray-800'
   }
+}
+
+const formatLastUpdated = (date) => {
+  return new Date(date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
 }
 
 // Load data on mount

@@ -33,9 +33,41 @@
   </div>
 
   <!-- Loading State -->
-  <div v-if="loading" class="flex items-center justify-center py-12">
-    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-    <span class="ml-3 text-lg text-gray-600">Loading products...</span>
+  <div v-if="loading" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div v-for="i in 4" :key="i" class="bg-white shadow rounded-lg overflow-hidden animate-pulse">
+      <!-- Product Header Skeleton -->
+      <div class="px-6 py-4 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <div class="h-6 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/2"></div>
+          </div>
+          <div class="flex space-x-2">
+            <div class="h-8 bg-gray-200 rounded w-16"></div>
+            <div class="h-8 bg-gray-200 rounded w-16"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing Table Skeleton -->
+      <div class="px-6 py-4">
+        <div class="h-5 bg-gray-200 rounded w-1/3 mb-3"></div>
+        <div class="space-y-3">
+          <div v-for="j in 4" :key="j" class="flex justify-between">
+            <div class="h-4 bg-gray-200 rounded w-1/3"></div>
+            <div class="h-4 bg-gray-200 rounded w-1/4"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Skeleton -->
+      <div class="px-6 py-4 bg-gray-50">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="h-4 bg-gray-200 rounded"></div>
+          <div class="h-4 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Empty State -->
@@ -60,25 +92,35 @@
 
   <!-- Products Grid -->
   <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div v-for="product in products" :key="product.id" class="bg-white shadow rounded-lg overflow-hidden">
+    <div v-for="product in products" :key="product.id" class="bg-white shadow-sm hover:shadow-lg transition-shadow duration-200 rounded-lg overflow-hidden border border-gray-200 hover:border-gray-300">
       <!-- Product Header -->
-      <div class="px-6 py-4 border-b border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-white">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-lg font-medium text-gray-900">{{ product.name }}</h3>
-            <p class="text-sm text-gray-500">Product ID: {{ product.id.slice(-8) }}</p>
+            <h3 class="text-lg font-semibold text-gray-900">{{ product.name }}</h3>
+            <div class="flex items-center mt-1">
+              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                ID: {{ product.id.slice(-8) }}
+              </span>
+            </div>
           </div>
           <div class="flex space-x-2">
             <NuxtLink
               :to="`/admin/products-edit-${product.id}`"
-              class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-blue-50 hover:border-blue-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
             >
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
               Edit
             </NuxtLink>
             <button
               @click="deleteProduct(product.id)"
-              class="text-red-600 hover:text-red-900 text-sm font-medium"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-red-600 hover:text-red-800 hover:bg-red-50 rounded-md transition-colors duration-200"
             >
+              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
               Delete
             </button>
           </div>
@@ -107,15 +149,29 @@
       </div>
 
       <!-- Product Stats -->
-      <div class="px-6 py-4 bg-gray-50">
+      <div class="px-6 py-4 bg-gradient-to-r from-gray-50 to-gray-100">
         <div class="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <span class="text-gray-500">Total Orders:</span>
-            <span class="ml-2 font-medium text-gray-900">{{ getProductStats(product.id).orders }}</span>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="w-4 h-4 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <div>
+              <span class="text-gray-500">Orders:</span>
+              <span class="ml-1 font-semibold text-gray-900">{{ getProductStats(product.id).orders }}</span>
+            </div>
           </div>
-          <div>
-            <span class="text-gray-500">Revenue:</span>
-            <span class="ml-2 font-medium text-gray-900">${{ getProductStats(product.id).revenue.toFixed(2) }}</span>
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <svg class="w-4 h-4 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+            </div>
+            <div>
+              <span class="text-gray-500">Revenue:</span>
+              <span class="ml-1 font-semibold text-green-700">${{ getProductStats(product.id).revenue.toFixed(2) }}</span>
+            </div>
           </div>
         </div>
       </div>
