@@ -9,35 +9,60 @@ export const useAdminAuth = () => {
   // Initialize auth state from Supabase session
   const initAuth = async () => {
     if (process.client) {
-      try {
-        // Get current Supabase session
-        const { data: { session } } = await supabase.auth.getSession()
-        
-        if (session?.user) {
-          // Check if this user is in admin_users table
-          const { data: adminData, error } = await supabase
-            .from('admin_users')
-            .select('*')
-            .eq('auth_id', session.user.id)
-            .eq('status', 'active')
-            .single()
+      adminUser.value = null; // Reset initially
+      adminToken.value = null; // Reset initially
 
-          if (adminData && !error) {
-            adminUser.value = {
-              id: adminData.id,
-              email: adminData.email,
-              role: adminData.role,
-              auth_id: adminData.auth_id
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.user && session.access_token) {
+          // Call the new server API to verify admin status
+          const response = await fetch('/api/auth/verify-admin-status', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${session.access_token}`,
+              'Content-Type': 'application/json'
             }
-            adminToken.value = session.access_token
-          } else {
-            // User exists in Supabase Auth but not in admin_users or inactive
-            await supabase.auth.signOut()
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: response.statusText }));
+            console.error('Error verifying admin status via API:', response.status, errorData.message);
+            // Do not call full logout() here as it might cause redirect loops during initial load
+            // Clearing local state is enough, middleware will handle redirect if needed on route change.
+            adminUser.value = null;
+            adminToken.value = null;
+            await supabase.auth.signOut().catch(e => console.error('Error signing out after API verification failure:', e));
+            return;
           }
+
+          const verificationResult = await response.json();
+
+          if (verificationResult.isAdmin && verificationResult.adminUser) {
+            adminUser.value = verificationResult.adminUser;
+            adminToken.value = session.access_token; // Store the original session token
+          } else {
+            // User is authenticated with Supabase but not a recognized/active admin by our API
+            console.log('User authenticated but not a recognized admin by API, signing out locally.');
+            adminUser.value = null;
+            adminToken.value = null;
+            // We don't necessarily need to sign out the Supabase session itself here,
+            // as they might be a valid Supabase user but not an admin for *this* app.
+            // The lack of adminUser/adminToken will prevent admin access.
+            // However, if the previous logic was to sign out fully, we can keep that:
+            await supabase.auth.signOut().catch(e => console.error('Error signing out non-admin user:', e));
+          }
+        } else {
+          // No active Supabase session or token
+          adminUser.value = null;
+          adminToken.value = null;
         }
       } catch (error) {
-        console.error('Error initializing auth:', error)
-        await logout()
+        console.error('Error during initAuth calling verification API:', error);
+        adminUser.value = null; // Ensure state is cleared on error
+        adminToken.value = null;
+        // Avoid full logout() here to prevent potential redirect loops on initial load errors.
+        // Consider if a full supabase.auth.signOut() is always desired on any initAuth error.
       }
     }
   }
@@ -58,42 +83,59 @@ export const useAdminAuth = () => {
 
       if (error) throw error
 
-      if (data.user) {
-        // Check if this user is in admin_users table
-        const { data: adminData, error: adminError } = await supabase
-          .from('admin_users')
-          .select('*')
-          .eq('auth_id', data.user.id)
-          .eq('status', 'active')
-          .single()
+      if (data.user && data.session) { // data.session should exist on successful signInWithPassword
+        // Verify admin status using the API
+        const verifyResponse = await fetch('/api/auth/verify-admin-status', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${data.session.access_token}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-        if (adminError || !adminData) {
-          // User not found in admin_users or inactive
-          await supabase.auth.signOut()
-          throw new Error('Access denied. You are not authorized as an admin user.')
+        if (!verifyResponse.ok) {
+          const errorBody = await verifyResponse.text(); // Get raw text for better error logging
+          console.error('Admin verification API call failed after login:', verifyResponse.status, errorBody);
+          let errorMessage = 'Admin verification failed after login.';
+          try {
+            const errorData = JSON.parse(errorBody);
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } catch (e) { /* Ignore if not JSON */ }
+          await supabase.auth.signOut().catch(e => console.error('Error signing out after failed admin verification:', e));
+          throw new Error(errorMessage);
         }
 
-        // Update last login
-        await supabase
-          .from('admin_users')
-          .update({ last_login: new Date().toISOString() })
-          .eq('id', adminData.id)
+        const verificationResult = await verifyResponse.json();
+
+        if (!verificationResult.isAdmin || !verificationResult.adminUser) {
+          await supabase.auth.signOut().catch(e => console.error('Error signing out non-admin after login attempt:', e));
+          throw new Error('Access denied. You are not authorized as an admin user.');
+        }
+
+        // Update last login (this needs RLS for UPDATE on admin_users)
+        try {
+            await supabase
+              .from('admin_users')
+              .update({ last_login: new Date().toISOString() })
+              .eq('id', verificationResult.adminUser.id); // Use ID from verified admin user
+        } catch (updateError) {
+            console.warn('Failed to update last_login:', updateError.message);
+            // Non-critical, so don't fail the login for this
+        }
 
         // Set auth state
-        adminUser.value = {
-          id: adminData.id,
-          email: adminData.email,
-          role: adminData.role,
-          auth_id: adminData.auth_id
-        }
-        adminToken.value = data.session.access_token
+        adminUser.value = verificationResult.adminUser;
+        adminToken.value = data.session.access_token;
 
-        return { success: true }
+        return { success: true };
       }
 
-      throw new Error('Authentication failed')
+      throw new Error('Authentication failed: No user or session data returned.')
     } catch (error) {
-      console.error('Login error:', error)
+      console.error('Login error:', error.message);
+      // Ensure admin state is cleared on login failure
+      adminUser.value = null;
+      adminToken.value = null;
       return { success: false, error: error.message }
     }
   }
@@ -232,11 +274,22 @@ export const useAdminAuth = () => {
   // Listen to auth state changes
   if (process.client) {
     supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('onAuthStateChange event:', event, 'session:', !!session);
       if (event === 'SIGNED_OUT') {
         adminUser.value = null
         adminToken.value = null
-      } else if (event === 'SIGNED_IN' && session?.user) {
-        await initAuth()
+        // navigateTo might be handled by middleware or explicit calls in UI
+      } else if (event === 'INITIAL_SESSION' || event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        // For TOKEN_REFRESHED, ensure the new token is used for verification if needed.
+        // The current initAuth() will use the latest session.access_token.
+        if (session?.user && session.access_token) {
+            await initAuth(); // This will now use the API for verification
+        } else if (event === 'SIGNED_IN' && (!session?.user || !session?.access_token)) {
+            // This case might happen if SIGNED_IN fires but session is incomplete, logout to be safe
+            console.warn('SIGNED_IN event with incomplete session, clearing admin state.');
+            adminUser.value = null;
+            adminToken.value = null;
+        }
       }
     })
   }
