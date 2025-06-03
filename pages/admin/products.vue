@@ -219,6 +219,7 @@ const deleteProduct = async (productId) => {
 
   try {
     // Use the new API endpoint that bypasses RLS
+    console.log('[deleteProduct] Token being sent:', adminToken.value);
     const response = await $fetch('/api/admin/delete-product', {
       method: 'POST',
       headers: {
