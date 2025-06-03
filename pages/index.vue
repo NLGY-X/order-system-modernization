@@ -38,8 +38,8 @@
             </NuxtLink>
             <NuxtLink to="/admin/login" class="text-white bg-red-600 hover:bg-red-700 px-3 py-2 rounded-md text-sm font-medium transition-colors border border-red-500 shadow-lg">
               <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
               Admin
             </NuxtLink>
           </div>
@@ -65,7 +65,7 @@
             <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <NuxtLink to="/signup" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-lg font-semibold text-lg transition-colors shadow-lg">
                 Apply for Partnership
-              </NuxtLink>
+          </NuxtLink>
               <a href="#features" class="border border-gray-600 text-white hover:bg-gray-800 px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-200 text-center">
                 Learn More
               </a>
@@ -289,8 +289,8 @@
             </p>
             <div class="flex flex-wrap gap-2 mb-4">
               <span class="bg-gray-700 text-gray-300 px-2 py-1 rounded text-xs">Early Access</span>
-            </div>
-          </div>
+        </div>
+      </div>
 
           <!-- TypeScript -->
           <div class="bg-gray-800 rounded-xl p-6 border border-gray-700 hover:border-blue-500 transition-colors">
@@ -298,7 +298,7 @@
               <div class="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center mr-4">
                 <span class="text-white font-bold text-lg">TS</span>
               </div>
-              <div>
+            <div>
                 <h3 class="text-xl font-semibold text-white">TypeScript</h3>
                 <p class="text-blue-400 text-sm">Coming Soon</p>
               </div>
@@ -354,42 +354,60 @@
         </div>
 
         <div class="bg-gray-900 rounded-2xl p-8 border border-gray-700">
-          <h3 class="text-2xl font-bold text-white text-center mb-8">Official Partnerships</h3>
-          <div class="grid md:grid-cols-2 gap-8">
-            <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 bg-green-500 rounded-xl flex items-center justify-center">
-                <span class="text-white font-bold text-2xl">V</span>
+          <h3 class="text-2xl font-bold text-white text-center mb-8">Official Partnerships & Expert Validation</h3>
+          <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+              <div class="w-14 h-14 bg-green-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-white font-bold text-xl">V</span>
               </div>
               <div>
-                <h4 class="text-white font-semibold">Vue.js Partnership</h4>
-                <p class="text-gray-400 text-sm">Developed with Evan You, Creator of Vue.js</p>
+                <h4 class="text-white font-semibold text-sm">Vue.js Official</h4>
+                <p class="text-gray-400 text-xs">Created with Evan You & Core Team</p>
               </div>
             </div>
-            <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 bg-green-400 rounded-xl flex items-center justify-center">
-                <span class="text-black font-bold text-2xl">N</span>
+            <div class="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+              <div class="w-14 h-14 bg-green-400 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-black font-bold text-xl">N</span>
               </div>
               <div>
-                <h4 class="text-white font-semibold">Nuxt Partnership</h4>
-                <p class="text-gray-400 text-sm">Created with Sébastien Chopin, Creator of Nuxt</p>
+                <h4 class="text-white font-semibold text-sm">Nuxt Official</h4>
+                <p class="text-gray-400 text-xs">Built with Sébastien Chopin & Team</p>
               </div>
             </div>
-            <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 bg-red-500 rounded-xl flex items-center justify-center">
-                <span class="text-white font-bold text-2xl">A</span>
+            <div class="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+              <div class="w-14 h-14 bg-red-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-white font-bold text-xl">A</span>
               </div>
               <div>
-                <h4 class="text-white font-semibold">Angular Experts</h4>
-                <p class="text-gray-400 text-sm">Reviewed by Google Developer Experts</p>
+                <h4 class="text-white font-semibold text-sm">Angular Validated</h4>
+                <p class="text-gray-400 text-xs">Reviewed by Google Developer Experts</p>
               </div>
             </div>
-            <div class="flex items-center space-x-4">
-              <div class="w-16 h-16 bg-blue-600 rounded-xl flex items-center justify-center">
-                <span class="text-white font-bold text-2xl">★</span>
+            <div class="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+              <div class="w-14 h-14 bg-yellow-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-black font-bold text-xl">JS</span>
               </div>
               <div>
-                <h4 class="text-white font-semibold">Industry Experts</h4>
-                <p class="text-gray-400 text-sm">Curated by top professionals in each field</p>
+                <h4 class="text-white font-semibold text-sm">JavaScript Expert</h4>
+                <p class="text-gray-400 text-xs">Curated by Senior Industry Leaders</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+              <div class="w-14 h-14 bg-blue-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-white font-bold text-xl">TS</span>
+              </div>
+              <div>
+                <h4 class="text-white font-semibold text-sm">TypeScript Pro</h4>
+                <p class="text-gray-400 text-xs">Designed by TypeScript Champions</p>
+              </div>
+            </div>
+            <div class="flex items-center space-x-4 p-4 bg-gray-800/50 rounded-xl border border-gray-700/50">
+              <div class="w-14 h-14 bg-purple-500 rounded-xl flex items-center justify-center flex-shrink-0">
+                <span class="text-white font-bold text-xl">★</span>
+              </div>
+              <div>
+                <h4 class="text-white font-semibold text-sm">Industry Standard</h4>
+                <p class="text-gray-400 text-xs">Trusted by Fortune 500 Companies</p>
               </div>
             </div>
           </div>
@@ -420,7 +438,7 @@
               <span class="text-gray-400 font-semibold">DevInstitute</span>
             </div>
           </div>
-          <div class="text-center">
+        <div class="text-center">
             <div class="h-12 bg-gray-700 rounded-lg flex items-center justify-center">
               <span class="text-gray-400 font-semibold">SkillForge</span>
             </div>
@@ -439,7 +457,7 @@
           <p class="text-xl text-gray-400 max-w-3xl mx-auto">
             Apply for partnership and start offering industry-trusted credentials to your students today.
           </p>
-        </div>
+      </div>
 
         <div class="max-w-2xl mx-auto text-center">
           <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 shadow-2xl">
@@ -555,7 +573,7 @@
             <div>
               <label class="block text-sm font-medium text-gray-300 mb-2">Message (Optional)</label>
               <textarea v-model="demoForm.message" rows="3" class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:border-blue-500"></textarea>
-            </div>
+          </div>
             <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold transition-colors">
               Schedule Demo
             </button>
