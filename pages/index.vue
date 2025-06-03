@@ -19,8 +19,23 @@
               <a href="#features" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Features</a>
               <a href="#pricing" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Pricing</a>
               <a href="#contact" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors">Contact</a>
+              <NuxtLink to="/admin/login" class="text-blue-400 hover:text-blue-300 px-3 py-2 rounded-md text-sm font-medium transition-colors border border-blue-500/30 bg-blue-900/20">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                Admin
+              </NuxtLink>
               <button @click="openDemo" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">Request Demo</button>
             </div>
+          </div>
+          <!-- Mobile menu button and admin link -->
+          <div class="md:hidden flex items-center space-x-2">
+            <NuxtLink to="/admin/login" class="text-blue-400 hover:text-blue-300 px-2 py-1 rounded text-sm font-medium transition-colors border border-blue-500/30 bg-blue-900/20">
+              <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Admin
+            </NuxtLink>
           </div>
         </div>
       </div>
