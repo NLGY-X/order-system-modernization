@@ -171,47 +171,47 @@ const email = route.query.email as string;
 const verifyInvitation = async () => {
   try {
     if (!token || !email) {
-      error.value = 'Invalid invitation link. Please check your email for the correct link.'
-      return
+      error.value = 'Invalid invitation link. Please check your email for the correct link.';
+      return;
     }
 
-    form.value.email = decodeURIComponent(email)
+    form.value.email = decodeURIComponent(email);
 
     // Verify the invitation token
     const response = await $fetch('/api/verify-invitation', {
       method: 'POST',
       body: { token, email: form.value.email }
-    })
+    });
 
     if (response.success) {
-      invitationData.value = response.invitation
+      invitationData.value = response.invitation;
     } else {
-      error.value = response.message || 'Invalid or expired invitation'
+      error.value = response.message || 'Invalid or expired invitation';
     }
 
   } catch (err) {
-    console.error('Invitation verification error:', err)
-    error.value = 'Failed to verify invitation. Please try again.'
+    console.error('Invitation verification error:', err);
+    error.value = 'Failed to verify invitation. Please try again.';
   } finally {
-    verifying.value = false
+    verifying.value = false;
   }
-}
+};
 
 // Form submission
 const handleSubmit = async () => {
   try {
-    loading.value = true
-    error.value = ''
+    loading.value = true;
+    error.value = '';
 
     // Validation
     if (!form.value.password.trim() || form.value.password.length < 6) {
-      error.value = 'Password must be at least 6 characters long'
-      return
+      error.value = 'Password must be at least 6 characters long';
+      return;
     }
 
     if (form.value.password !== form.value.confirmPassword) {
-      error.value = 'Passwords do not match'
-      return
+      error.value = 'Passwords do not match';
+      return;
     }
 
     // Complete the signup
@@ -222,24 +222,24 @@ const handleSubmit = async () => {
         email: form.value.email,
         password: form.value.password
       }
-    })
+    });
 
     if (response.success) {
-      successMessage.value = 'Admin account created successfully! You can now log in.'
+      successMessage.value = 'Admin account created successfully! You can now log in.';
     } else {
-      error.value = response.message || 'Failed to create account'
+      error.value = response.message || 'Failed to create account';
     }
 
   } catch (err) {
-    console.error('Signup error:', err)
-    error.value = err.data?.message || 'Failed to create admin account'
+    console.error('Signup error:', err);
+    error.value = err.data?.message || 'Failed to create admin account';
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 // Initialize on mount
 onMounted(() => {
-  verifyInvitation()
-})
+  verifyInvitation();
+});
 </script> 
