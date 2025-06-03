@@ -164,8 +164,8 @@ const form = ref({
 
 // Get query parameters
 const route = useRoute();
-const token = route.query.token as string;
-const email = route.query.email as string;
+const token = route.query.token;
+const email = route.query.email;
 
 // Verify invitation on mount
 const verifyInvitation = async () => {
@@ -175,12 +175,12 @@ const verifyInvitation = async () => {
       return;
     }
 
-    form.value.email = decodeURIComponent(email);
+    form.value.email = decodeURIComponent(String(email));
 
     // Verify the invitation token
     const response = await $fetch('/api/verify-invitation', {
       method: 'POST',
-      body: { token, email: form.value.email }
+      body: { token: String(token), email: form.value.email }
     });
 
     if (response.success) {
@@ -218,7 +218,7 @@ const handleSubmit = async () => {
     const response = await $fetch('/api/complete-admin-signup', {
       method: 'POST',
       body: {
-        token,
+        token: String(token),
         email: form.value.email,
         password: form.value.password
       }

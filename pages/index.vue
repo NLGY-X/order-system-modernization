@@ -182,6 +182,17 @@ const fetchFormData = async () => {
     error.value = null
     usingMockData.value = false
 
+    // During SSG/prerendering, use mock data
+    if (process.server && !config.public.supabaseUrl) {
+      console.log('Using mock data during SSG/prerendering')
+      data.value = {
+        products: mockProducts,
+        countries: mockCountries
+      }
+      usingMockData.value = true
+      return
+    }
+
     const supabase = useSupabase()
 
     // Fetch products and countries directly from the database
