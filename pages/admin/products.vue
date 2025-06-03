@@ -213,28 +213,30 @@ const getProductStats = (productId) => {
 
 
 
-// Delete product
+// Delete product - FIXED VERSION
 const deleteProduct = async (productId) => {
   if (!confirm('Are you sure you want to delete this product? This action cannot be undone.')) {
     return
   }
 
   try {
-    const supabase = useSupabase()
+    // Use the new API endpoint that bypasses RLS
+    const response = await $fetch('/api/admin/delete-product', {
+      method: 'POST',
+      body: { productId }
+    })
 
-    // Delete pricing first (foreign key constraint)
-    await supabase.from('product_prices').delete().eq('product_id', productId)
-    
-    // Delete product
-    const { error } = await supabase.from('products').delete().eq('id', productId)
-    
-    if (error) throw error
-
-    // Refresh data
-    await loadData()
+    if (response.success) {
+      console.log('Product deleted successfully!')
+      // Refresh data to remove from UI
+      await loadData()
+    } else {
+      throw new Error(response.message || 'Failed to delete product')
+    }
 
   } catch (error) {
     console.error('Error deleting product:', error)
+    alert(`Failed to delete product: ${error.message}`)
   }
 }
 

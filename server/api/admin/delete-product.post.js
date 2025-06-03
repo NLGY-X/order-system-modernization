@@ -18,6 +18,17 @@ export default defineEventHandler(async (event) => {
       process.env.SUPABASE_SERVICE_ROLE_KEY
     )
 
+    // Delete product_prices first (foreign key constraint)
+    const { error: pricesError } = await supabaseAdmin
+      .from('product_prices')
+      .delete()
+      .eq('product_id', productId)
+
+    if (pricesError) {
+      console.warn('Error deleting product prices:', pricesError.message)
+      // Continue anyway - prices might not exist
+    }
+
     // Delete the product using admin client
     const { error } = await supabaseAdmin
       .from('products')
