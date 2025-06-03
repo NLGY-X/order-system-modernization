@@ -1,56 +1,76 @@
 import { createClient } from '@supabase/supabase-js'
 
 export default defineEventHandler(async (event) => {
+  const config = useRuntimeConfig(event)
+  const body = await readBody(event)
+  const { productId } = body
+
+  if (!productId) {
+    throw createError({ statusCode: 400, statusMessage: 'Product ID is required' })
+  }
+
+  // --- AUTHENTICATION/AUTHORIZATION --- 
+  const token = getHeader(event, 'authorization')?.split(' ')[1]
+  if (!token) {
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized: Missing token' })
+  }
+
+  if (!config.public.supabaseUrl || !config.public.supabaseAnonKey || !config.supabaseServiceRoleKey) {
+    console.error('Supabase critical keys are not configured in runtimeConfig for API route.')
+    throw createError({ statusCode: 500, statusMessage: 'Server configuration error (keys missing).' })
+  }
+
+  // Create a Supabase client with the user's token to verify them
+  const supabaseUserClient = createClient(config.public.supabaseUrl, config.public.supabaseAnonKey, {
+    global: { headers: { Authorization: `Bearer ${token}` } }
+  })
+
+  const { data: { user }, error: authError } = await supabaseUserClient.auth.getUser()
+  if (authError || !user) {
+    throw createError({ statusCode: 401, statusMessage: 'Unauthorized: Invalid or expired token' })
+  }
+
+  // Check if the authenticated Supabase user is a recognized admin in the 'admin_users' table
+  const supabaseServiceRoleClient = createClient(config.public.supabaseUrl, config.supabaseServiceRoleKey)
+  const { data: adminRecord, error: adminCheckError } = await supabaseServiceRoleClient
+    .from('admin_users')
+    .select('id, status, role') // You might want to check the role as well if you have different admin levels
+    .eq('auth_id', user.id)
+    .eq('status', 'active')
+    .single()
+
+  if (adminCheckError || !adminRecord) {
+    let message = 'Forbidden: You are not an authorized admin user.'
+    if (adminCheckError && adminCheckError.code !== 'PGRST116') { // PGRST116: single row not found (expected)
+        console.error("Error checking admin status:", adminCheckError);
+        message = "Forbidden: Error verifying admin status."
+    } else if (!adminRecord) {
+        message = "Forbidden: Admin record not found or not active."
+    }
+    throw createError({ statusCode: 403, statusMessage: message })
+  }
+  // --- END AUTHENTICATION/AUTHORIZATION ---
+
+  // User is now authenticated and authorized as an active admin.
+  // Proceed with deleting the product using the `delete_product_force` RPC.
+
   try {
-    const body = await readBody(event)
-    const { productId } = body
-
-    if (!productId) {
-      return { success: false, error: 'Product ID is required' }
-    }
-
-    // Try service role first, fallback to anon key
-    const supabaseUrl = process.env.SUPABASE_URL || 'https://zezcsjltcbajkuqyxupt.supabase.co'
-    let supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY
-
-    const supabase = createClient(supabaseUrl, supabaseKey)
-
-    // If using service role, just delete directly
-    if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
-      // Delete product_prices first
-      await supabase.from('product_prices').delete().eq('product_id', productId)
-      
-      // Delete product
-      const { error } = await supabase.from('products').delete().eq('id', productId)
-      
-      if (error) {
-        return { success: false, error: error.message }
-      }
-      
-      return { success: true, message: 'Product deleted successfully' }
-    }
-
-    // Fallback: Use raw SQL to bypass RLS completely
-    const { error: sqlError } = await supabase.rpc('delete_product_force', { 
+    const { error: rpcError } = await supabaseServiceRoleClient.rpc('delete_product_force', { 
       product_id: productId 
     })
 
-    if (sqlError) {
-      // Final fallback: Try direct delete anyway
-      const { error: deleteError } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', productId)
-        
-      if (deleteError) {
-        return { success: false, error: deleteError.message }
-      }
+    if (rpcError) {
+      console.error('Error calling delete_product_force RPC:', rpcError)
+      throw createError({ statusCode: 500, statusMessage: `Failed to delete product: ${rpcError.message}` })
     }
-
-    return { success: true, message: 'Product deleted successfully' }
+    
+    return { success: true, message: 'Product deleted successfully via RPC' }
 
   } catch (error) {
-    console.error('Delete product error:', error)
-    return { success: false, error: error.message }
+    if (error.statusCode) { // If it's an error we threw with createError
+      throw error;
+    }
+    console.error('Unhandled error during product deletion RPC call:', error)
+    throw createError({ statusCode: 500, statusMessage: error.message || 'An unexpected error occurred during product deletion.' })
   }
 }) 
