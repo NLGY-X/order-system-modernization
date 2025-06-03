@@ -35,6 +35,34 @@
         class="form-field"
       />
       
+      <!-- Pricing Preview -->
+      <div v-if="pricingPreview" class="bg-gray-800/50 border border-gray-600 rounded-lg p-6 space-y-3">
+        <h3 class="text-lg font-semibold text-white">Order Summary</h3>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span class="text-gray-300">Unit Price:</span>
+            <span class="text-white">${{ pricingPreview.unitPrice.toFixed(2) }}</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-gray-300">Quantity:</span>
+            <span class="text-white">{{ pricingPreview.quantity }}</span>
+          </div>
+          <div v-if="pricingPreview.volumeDiscount < 1" class="flex justify-between text-green-400">
+            <span>Volume Discount:</span>
+            <span>{{ Math.round((1 - pricingPreview.volumeDiscount) * 100) }}% off</span>
+          </div>
+          <div v-if="pricingPreview.pppDiscount < 1" class="flex justify-between text-blue-400">
+            <span>Regional Discount:</span>
+            <span>{{ Math.round((1 - pricingPreview.pppDiscount) * 100) }}% off</span>
+          </div>
+          <hr class="border-gray-600">
+          <div class="flex justify-between text-lg font-semibold">
+            <span class="text-white">Total:</span>
+            <span class="text-green-400">${{ pricingPreview.total.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+      
       <button
         type="submit"
         :disabled="submissionStatus === 'loading' || !isFormValid"
@@ -59,7 +87,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import SelectInput from './ui/SelectInput.vue'
 import TextInput from './ui/TextInput.vue'
 import NumberInput from './ui/NumberInput.vue'
@@ -88,6 +116,10 @@ const form = ref({
 const submissionStatus = ref('idle')
 const errorMessage = ref('')
 
+// Pricing preview state
+const pricingPreview = ref(null)
+const pricingLoading = ref(false)
+
 // Form validation
 const isFormValid = computed(() => {
   return form.value.productId && 
@@ -96,6 +128,57 @@ const isFormValid = computed(() => {
          form.value.email && 
          isValidEmail(form.value.email)
 })
+
+// Watch for changes to calculate pricing
+watch(
+  () => [form.value.productId, form.value.countryName, form.value.quantity],
+  async ([productId, countryName, quantity]) => {
+    if (productId && countryName && quantity > 0) {
+      await calculatePricing()
+    } else {
+      pricingPreview.value = null
+    }
+  },
+  { deep: true }
+)
+
+// Calculate pricing preview
+const calculatePricing = async () => {
+  if (!form.value.productId || !form.value.countryName || form.value.quantity <= 0) {
+    pricingPreview.value = null
+    return
+  }
+
+  pricingLoading.value = true
+  try {
+    const selectedProduct = props.products.find(p => p.id === form.value.productId)
+    if (!selectedProduct) return
+
+    const response = await $fetch('/api/calculate-pricing', {
+      method: 'POST',
+      body: {
+        productName: selectedProduct.name,
+        countryName: form.value.countryName,
+        quantity: form.value.quantity
+      }
+    })
+
+    if (response.success) {
+      pricingPreview.value = {
+        unitPrice: response.unitPrice,
+        quantity: form.value.quantity,
+        total: response.unitPrice * form.value.quantity,
+        volumeDiscount: response.volumeDiscount || 1,
+        pppDiscount: response.pppDiscount || 1
+      }
+    }
+  } catch (error) {
+    console.error('Pricing calculation failed:', error)
+    pricingPreview.value = null
+  } finally {
+    pricingLoading.value = false
+  }
+}
 
 const isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

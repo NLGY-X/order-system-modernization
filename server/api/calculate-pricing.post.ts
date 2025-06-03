@@ -3,16 +3,21 @@ import { createClient } from '@supabase/supabase-js'
 export default defineEventHandler(async (event) => {
   try {
     const body = await readBody(event)
-    console.log('Received body:', body)
-    
-    const { email, productName, countryName, quantity } = body
+    const { productName, countryName, quantity } = body
     
     // Validate input
-    if (!email || !productName || !countryName || !quantity) {
-      console.error('Missing fields:', { email: !!email, productName: !!productName, countryName: !!countryName, quantity: !!quantity })
+    if (!productName || !countryName || !quantity) {
       throw createError({
         statusCode: 400,
         statusMessage: 'Missing required fields'
+      })
+    }
+
+    const quantityNum = typeof quantity === 'number' ? quantity : parseInt(quantity)
+    if (isNaN(quantityNum) || quantityNum <= 0) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: 'Invalid quantity'
       })
     }
 
@@ -24,75 +29,32 @@ export default defineEventHandler(async (event) => {
       config.supabaseServiceRoleKey
     )
 
-    // Ensure quantity is a valid number
-    const quantityNum = typeof quantity === 'number' ? quantity : parseInt(quantity)
-    if (isNaN(quantityNum) || quantityNum <= 0) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: 'Invalid quantity'
-      })
-    }
-
-    // Calculate the total price
-    const unitPrice = await calculatePriceFromDatabase(productName, countryName, quantityNum, supabase)
-    const totalPrice = unitPrice * quantityNum
-
-    console.log('Calculated pricing:', {
-      productName,
-      countryName,
-      quantity: quantityNum,
-      unitPrice,
-      totalPrice
-    })
-
-    const orderData = {
-      email,
-      product_name: productName,
-      country_name: countryName,
-      quantity: quantityNum,
-      total_price_usd: totalPrice,
-      status: 'pending'
-    }
-    
-    console.log('Inserting order:', orderData)
-
-    // Insert the order
-    const { data, error } = await supabase
-      .from('orders')
-      .insert(orderData)
-      .select()
-
-    if (error) {
-      console.error('Supabase error:', error)
-      throw createError({
-        statusCode: 500,
-        statusMessage: `Database error: ${error.message}`
-      })
-    }
-
-    console.log('Order created successfully:', data)
+    // Calculate the unit price
+    const result = await calculatePriceFromDatabase(productName, countryName, quantityNum, supabase)
 
     return {
       success: true,
-      order: data[0]
+      unitPrice: result.unitPrice,
+      volumeDiscount: result.volumeDiscount,
+      pppDiscount: result.pppDiscount
     }
 
   } catch (error: any) {
-    console.error('Order creation failed:', error)
+    console.error('Pricing calculation failed:', error)
     
     if (error.statusCode) {
-      throw error // Re-throw HTTP errors
+      throw error
     }
     
     throw createError({
       statusCode: 500,
-      statusMessage: `Failed to create order: ${error.message}`
+      statusMessage: `Failed to calculate pricing: ${error.message}`
     })
   }
 })
 
-// Pricing calculation function - same logic as create-checkout.post.ts
-async function calculatePriceFromDatabase(productName: string, countryName: string, quantity: number, supabase: any): Promise<number> {
+// Enhanced pricing calculation that returns discount information
+async function calculatePriceFromDatabase(productName: string, countryName: string, quantity: number, supabase: any) {
   try {
     // First, get the product ID
     const { data: productData, error: productError } = await supabase
@@ -116,22 +78,25 @@ async function calculatePriceFromDatabase(productName: string, countryName: stri
     // If country not found, use Global pricing
     const pppTier = countryData?.ppp_tier || 'Global'
 
-    // Determine quantity tier
-    let minQuantity, maxQuantity
+    // Determine quantity tier and volume discount
+    let minQuantity, maxQuantity, volumeDiscount
     if (quantity >= 1 && quantity <= 100) {
       minQuantity = 1
       maxQuantity = 100
+      volumeDiscount = 1.0
     } else if (quantity >= 101 && quantity <= 400) {
       minQuantity = 101
       maxQuantity = 400
+      volumeDiscount = 0.95
     } else if (quantity >= 401 && quantity <= 800) {
       minQuantity = 401
       maxQuantity = 800
+      volumeDiscount = 0.90
     } else if (quantity >= 801) {
       minQuantity = 801
       maxQuantity = null
+      volumeDiscount = 0.85
     } else {
-      // Invalid quantity
       return getFallbackPrice(productName, countryName, quantity)
     }
 
@@ -163,15 +128,30 @@ async function calculatePriceFromDatabase(productName: string, countryName: stri
       return getFallbackPrice(productName, countryName, quantity)
     }
 
+    // Determine PPP discount
+    const pppDiscounts: Record<string, number> = {
+      'Global': 1.0,
+      'Tier 1': 0.8,
+      'Tier 2': 0.65,
+      'Tier 3': 0.5
+    }
+    const pppDiscount = pppDiscounts[pppTier] || 1.0
+
     console.log('Database price found:', {
       productName,
       country: countryName,
       quantity,
       pppTier,
-      price: priceData.price_usd
+      price: priceData.price_usd,
+      volumeDiscount,
+      pppDiscount
     })
 
-    return priceData.price_usd
+    return {
+      unitPrice: priceData.price_usd,
+      volumeDiscount,
+      pppDiscount
+    }
 
   } catch (error) {
     console.error('Database pricing lookup failed:', error)
@@ -179,8 +159,8 @@ async function calculatePriceFromDatabase(productName: string, countryName: stri
   }
 }
 
-// Fallback pricing function for backward compatibility and when database lookup fails
-function getFallbackPrice(productName: string, countryName: string, quantity: number): number {
+// Fallback pricing function that returns discount info
+function getFallbackPrice(productName: string, countryName: string, quantity: number) {
   console.log('Using fallback pricing for:', productName)
   
   // Enhanced base prices including new products
@@ -270,5 +250,9 @@ function getFallbackPrice(productName: string, countryName: string, quantity: nu
     finalPrice
   })
 
-  return finalPrice
+  return {
+    unitPrice: finalPrice,
+    volumeDiscount,
+    pppDiscount
+  }
 } 
