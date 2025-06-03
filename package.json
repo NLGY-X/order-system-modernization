@@ -11,7 +11,9 @@
     "postinstall": "nuxt prepare",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage"
+    "test:coverage": "vitest --coverage",
+    "test:pricing": "node tests/run-pricing-tests.js",
+    "test:pricing-watch": "vitest tests/pricing-calculations.test.js --watch"
   },
   "dependencies": {
     "@stripe/stripe-js": "^7.3.1",
