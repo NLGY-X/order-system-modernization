@@ -186,7 +186,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useAdminAuthV2 } from '@/composables/useAdminAuthV2'
 
 // Protect this route with admin auth and set layout
 definePageMeta({
@@ -207,7 +208,7 @@ const loading = ref(true)
 const adminUsers = ref([])
 const showInviteModal = ref(false)
 const inviting = ref(false)
-const { adminUser } = useAdminAuth()
+const { adminUser } = useAdminAuthV2()
 
 // Invite form
 const inviteForm = ref({

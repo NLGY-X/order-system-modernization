@@ -179,12 +179,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useAdminAuthV2 } from '@/composables/useAdminAuthV2'
 
 // Sidebar state
 const sidebarOpen = ref(false)
 
 // Auth
-const { adminUser, logout, initAuth } = useAdminAuth()
+const { adminUser, logout, initAuth } = useAdminAuthV2()
 
 // Initialize auth on mount
 onMounted(async () => {

@@ -155,6 +155,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useAdminAuthV2 } from '@/composables/useAdminAuthV2'
 
 // Set page metadata
 useHead({
@@ -176,6 +177,9 @@ const form = ref({
   password: '',
   confirmPassword: ''
 })
+
+// Auth composable
+const { login, isAuthenticated, initAuth, setupFirstAdmin } = useAdminAuthV2()
 
 // Check if we need setup mode
 const checkSetupMode = async () => {
@@ -243,7 +247,6 @@ const handleSubmit = async () => {
       }
 
       // Setup first admin
-      const { setupFirstAdmin } = useAdminAuth()
       const result = await setupFirstAdmin(form.value.email, form.value.password)
 
       if (result.success) {
@@ -255,7 +258,6 @@ const handleSubmit = async () => {
       }
     } else {
       // Login mode
-      const { login } = useAdminAuth()
       const result = await login(form.value.email, form.value.password)
 
       if (result.success) {
@@ -276,7 +278,6 @@ const handleSubmit = async () => {
 // Initialize on mount
 onMounted(async () => {
   // Check if already authenticated
-  const { isAuthenticated, initAuth } = useAdminAuth()
   await initAuth()
   
   if (isAuthenticated.value) {

@@ -1,7 +1,9 @@
+import { useAdminAuthV2 } from '@/composables/useAdminAuthV2';
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
   // Only run on client side
   if (process.client) {
-    const { isAuthenticated, initAuth } = useAdminAuth()
+    const { isAuthenticated, initAuth } = useAdminAuthV2()
     
     // Initialize auth state from Supabase session
     await initAuth()

@@ -258,6 +258,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useAdminAuthV2 } from '@/composables/useAdminAuthV2'
 
 // Protect this route with admin auth
 definePageMeta({
@@ -273,7 +274,7 @@ useHead({
 })
 
 // Auth
-const { adminUser } = useAdminAuth()
+const { adminUser } = useAdminAuthV2()
 
 // Data
 const saving = ref(false)
