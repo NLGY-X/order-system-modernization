@@ -76,7 +76,6 @@
             <select
               id="tier-filter"
               v-model="filters.pppTier"
-              @change="applyFilters"
               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             >
               <option value="">All Tiers</option>
@@ -95,7 +94,6 @@
             <input
               id="search"
               v-model="filters.search"
-              @input="applyFilters"
               type="text"
               placeholder="Search by country name..."
               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -335,7 +333,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 
 // Protect this route with admin auth
 definePageMeta({
@@ -378,9 +376,16 @@ const countryForm = ref({
 const filteredCountries = computed(() => {
   let filtered = [...countries.value]
 
+  console.log('Filtering countries:', {
+    total: countries.value.length,
+    pppTierFilter: filters.value.pppTier,
+    searchFilter: filters.value.search
+  })
+
   // PPP Tier filter
   if (filters.value.pppTier) {
     filtered = filtered.filter(country => country.ppp_tier === filters.value.pppTier)
+    console.log('After PPP tier filter:', filtered.length)
   }
 
   // Search filter
@@ -389,8 +394,10 @@ const filteredCountries = computed(() => {
     filtered = filtered.filter(country => 
       country.country_name.toLowerCase().includes(searchTerm)
     )
+    console.log('After search filter:', filtered.length)
   }
 
+  console.log('Final filtered results:', filtered.length)
   return filtered.sort((a, b) => a.country_name.localeCompare(b.country_name))
 })
 
@@ -431,6 +438,12 @@ const loadData = async () => {
 
     countries.value = countriesResult.data || []
     orders.value = ordersResult.data || []
+
+    console.log('Countries data loaded:', {
+      countriesCount: countries.value.length,
+      ordersCount: orders.value.length,
+      countries: countries.value
+    })
 
   } catch (error) {
     console.error('Error loading data:', error)
@@ -554,8 +567,15 @@ const closeCountryModal = () => {
   }
 }
 
+// Watch for filter changes and reset pagination
+watch(filters, () => {
+  currentPage.value = 1
+  console.log('Filters changed, reset to page 1:', filters.value)
+}, { deep: true })
+
 // Apply filters
 const applyFilters = () => {
+  console.log('applyFilters called with:', filters.value)
   currentPage.value = 1 // Reset to first page when filtering
 }
 
