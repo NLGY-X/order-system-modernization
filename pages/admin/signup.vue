@@ -164,8 +164,8 @@ const form = ref({
 
 // Get query parameters
 const route = useRoute()
-const token = route.query.token as string
-const email = route.query.email as string
+const token = route.query.token as string;
+const email = route.query.email as string;
 
 // Verify invitation on mount
 const verifyInvitation = async () => {
