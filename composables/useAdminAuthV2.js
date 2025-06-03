@@ -34,10 +34,10 @@ export const useAdminAuthV2 = () => {
             return;
           }
 
-          const { isAdmin, user } = await response.json();
+          const { isAdmin, adminUser: adminDataFromApi } = await response.json();
 
-          if (isAdmin && user) {
-            adminUser.value = { ...session.user, ...user }; // Combine Supabase user with admin details
+          if (isAdmin && adminDataFromApi) {
+            adminUser.value = { ...session.user, ...adminDataFromApi }; // Combine Supabase user with admin details
             adminToken.value = session.access_token;
             console.log('[useAdminAuthV2] Admin status VERIFIED via API, user and token set:', adminUser.value);
           } else {
@@ -88,10 +88,10 @@ export const useAdminAuthV2 = () => {
           return { success: false, error: new Error(errorData.message || 'Failed to verify admin status.') };
         }
 
-        const { isAdmin, user: adminDetails } = await response.json();
+        const { isAdmin, adminUser: adminDataFromApi } = await response.json();
 
-        if (isAdmin && adminDetails) {
-          adminUser.value = { ...data.user, ...adminDetails };
+        if (isAdmin && adminDataFromApi) {
+          adminUser.value = { ...data.user, ...adminDataFromApi };
           adminToken.value = data.session.access_token;
           console.log('[useAdminAuthV2] Login successful & Admin status VERIFIED via API. Token and user set.');
           return { success: true, error: null };
