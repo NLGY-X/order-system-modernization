@@ -23,23 +23,6 @@
         </p>
       </div>
 
-      <!-- Database Status Warning -->
-      <div v-if="showDatabaseWarning" class="max-w-md mx-auto mb-8">
-        <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4">
-          <div class="flex items-center">
-            <svg class="h-5 w-5 text-yellow-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 15c-.77.833.192 2.5 1.732 2.5z" />
-            </svg>
-            <div>
-              <h3 class="text-yellow-800 font-medium text-sm">Development Mode</h3>
-              <p class="text-yellow-700 text-xs mt-1">
-                Using mock data. Database needs setup for full functionality.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Loading State -->
       <div v-if="pending" class="flex items-center justify-center py-12">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -149,13 +132,11 @@ const config = useRuntimeConfig()
 const data = ref(null)
 const pending = ref(true)
 const error = ref(null)
-const showDatabaseWarning = ref(false)
 
 const fetchFormData = async () => {
   try {
     pending.value = true
     error.value = null
-    showDatabaseWarning.value = false
 
     const supabase = useSupabase()
 
@@ -171,7 +152,6 @@ const fetchFormData = async () => {
         products: mockProducts,
         countries: mockCountries
       }
-      showDatabaseWarning.value = true
       return
     }
 
@@ -181,7 +161,6 @@ const fetchFormData = async () => {
         products: mockProducts,
         countries: mockCountries
       }
-      showDatabaseWarning.value = true
       return
     }
 
@@ -196,7 +175,6 @@ const fetchFormData = async () => {
         products: mockProducts,
         countries: mockCountries
       }
-      showDatabaseWarning.value = true
     }
 
   } catch (err) {
@@ -205,7 +183,6 @@ const fetchFormData = async () => {
       products: mockProducts,
       countries: mockCountries
     }
-    showDatabaseWarning.value = true
     error.value = err
   } finally {
     pending.value = false
