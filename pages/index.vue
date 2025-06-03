@@ -415,38 +415,6 @@
       </div>
     </section>
 
-    <!-- Social Proof -->
-    <section class="py-16 bg-gray-900">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h2 class="text-2xl font-bold text-white mb-4">Trusted by Leading Training Providers</h2>
-          <p class="text-gray-400">Join hundreds of organizations offering certificates.dev certifications through our partner program</p>
-        </div>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-60">
-          <div class="text-center">
-            <div class="h-12 bg-gray-700 rounded-lg flex items-center justify-center">
-              <span class="text-gray-400 font-semibold">TechBootcamp</span>
-            </div>
-          </div>
-          <div class="text-center">
-            <div class="h-12 bg-gray-700 rounded-lg flex items-center justify-center">
-              <span class="text-gray-400 font-semibold">CodeAcademy Plus</span>
-            </div>
-          </div>
-          <div class="text-center">
-            <div class="h-12 bg-gray-700 rounded-lg flex items-center justify-center">
-              <span class="text-gray-400 font-semibold">DevInstitute</span>
-            </div>
-          </div>
-        <div class="text-center">
-            <div class="h-12 bg-gray-700 rounded-lg flex items-center justify-center">
-              <span class="text-gray-400 font-semibold">SkillForge</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- Pricing Section -->
     <section id="pricing" class="py-20 bg-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
