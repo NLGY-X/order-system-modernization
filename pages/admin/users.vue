@@ -242,41 +242,34 @@ const loadAdminUsers = async () => {
 const inviteUser = async () => {
   try {
     inviting.value = true
-    const supabase = useSupabase()
 
-    // Check if user already exists
-    const { data: existingUser } = await supabase
-      .from('admin_users')
-      .select('id')
-      .eq('email', inviteForm.value.email)
-      .single()
-
-    if (existingUser) {
-      alert('User with this email already exists')
-      return
-    }
-
-    // Create admin user record (they'll need to sign up through Supabase Auth separately)
-    const { error } = await supabase
-      .from('admin_users')
-      .insert({
+    // Send invitation via API endpoint that handles both database and email
+    const response = await $fetch('/api/send-invitation', {
+      method: 'POST',
+      body: {
         email: inviteForm.value.email,
         role: inviteForm.value.role,
-        status: 'pending',
-        invited_by: adminUser.value?.id
-      })
+        invitedBy: adminUser.value?.id
+      }
+    })
 
-    if (error) throw error
+    if (response.success) {
+      alert(`✅ ${response.message}`)
+      showInviteModal.value = false
+      inviteForm.value = { email: '', role: 'admin' }
+      
+      // Reload the list to show the new pending user
+      await loadAdminUsers()
+    } else {
+      throw new Error(response.message || 'Failed to send invitation')
+    }
 
-    alert(`Invitation sent to ${inviteForm.value.email}`)
-    showInviteModal.value = false
-    inviteForm.value = { email: '', role: 'admin' }
-    
-    // Reload the list
-    await loadAdminUsers()
   } catch (error) {
     console.error('Error inviting user:', error)
-    alert('Failed to send invitation')
+    
+    // Show specific error message
+    const errorMessage = error.data?.message || error.message || 'Failed to send invitation'
+    alert(`❌ ${errorMessage}`)
   } finally {
     inviting.value = false
   }

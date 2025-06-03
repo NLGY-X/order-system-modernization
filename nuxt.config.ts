@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
     stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET || '',
     supabaseServiceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || '',
+    resendApiKey: process.env.RESEND_API_KEY || '',
     public: {
       // Public keys (exposed to client-side)
       supabaseUrl: process.env.SUPABASE_URL || '',
