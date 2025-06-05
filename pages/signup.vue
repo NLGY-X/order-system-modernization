@@ -210,15 +210,15 @@
 
             <div>
               <label for="certifications_interest" class="block text-sm font-medium text-gray-300 mb-3">Certification Interests</label>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <label v-for="cert in certificationOptions" :key="cert" class="inline-flex items-center">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <label v-for="cert in certificationOptions" :key="cert" class="flex items-center p-3 bg-gray-800/30 hover:bg-gray-700/40 rounded-lg border border-gray-700/50 hover:border-gray-600/50 transition-all duration-200 cursor-pointer group">
                   <input
                     type="checkbox"
                     :value="cert"
                     v-model="form.certifications_interest"
-                    class="rounded border-gray-600 bg-gray-900/50 text-blue-600 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50"
+                    class="rounded border-gray-600 bg-gray-900/50 text-blue-600 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200"
                   />
-                  <span class="ml-2 text-sm text-gray-300">{{ cert }}</span>
+                  <span class="ml-3 text-sm text-gray-300 group-hover:text-white transition-colors duration-200">{{ cert }}</span>
                 </label>
               </div>
             </div>
