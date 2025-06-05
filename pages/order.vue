@@ -108,27 +108,26 @@
               />
             </div>
 
-            <!-- Partner Access Key (Optional) -->
+            <!-- Partner Password -->
             <div>
-              <label for="accessKey" class="block text-sm font-medium text-gray-300 mb-2">
-                Access Key (if provided)
+              <label for="partnerPassword" class="block text-sm font-medium text-gray-300 mb-2">
+                Password
               </label>
               <input
-                id="accessKey"
-                v-model="accessKey"
+                id="partnerPassword"
+                v-model="partnerPassword"
                 type="password"
-                placeholder="Optional access key"
+                placeholder="Your password"
                 class="w-full px-4 py-3 bg-gray-900/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 @keyup.enter="authenticatePartner"
               />
-              <p class="text-gray-500 text-xs mt-1">Leave blank if you don't have an access key</p>
             </div>
 
             <!-- Access Buttons -->
             <div class="space-y-3">
               <button
                 @click="authenticatePartner"
-                :disabled="!partnerEmail || authLoading"
+                :disabled="!partnerEmail || !partnerPassword || authLoading"
                 class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 disabled:from-gray-600 disabled:to-gray-700 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span v-if="authLoading" class="flex items-center justify-center">
@@ -136,17 +135,9 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Verifying Access...
+                  Signing In...
                 </span>
-                <span v-else>Access Order System</span>
-              </button>
-
-              <!-- Demo Access Button -->
-              <button
-                @click="demoAccess"
-                class="w-full bg-gray-700 hover:bg-gray-600 text-white py-3 px-6 rounded-lg font-medium transition-all duration-200 border border-gray-600"
-              >
-                Continue with Demo Access
+                <span v-else>Sign In to Order System</span>
               </button>
             </div>
 
@@ -201,16 +192,34 @@
         <!-- Partner Welcome Message -->
         <div class="max-w-2xl mx-auto mb-8">
           <div class="bg-green-900/20 border border-green-500/30 rounded-lg p-4 backdrop-blur-sm">
-            <div class="flex items-center">
-              <svg class="h-5 w-5 text-green-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <h3 class="text-green-300 font-medium text-sm">Partner Access Granted</h3>
-                <p class="text-green-400 text-xs mt-1">
-                  Welcome {{ partnerEmail || 'Demo User' }}! You can now place orders with partner pricing.
-                  <button @click="logout" class="underline hover:text-green-300 ml-2">Logout</button>
-                </p>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <svg class="h-5 w-5 text-green-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>
+                  <h3 class="text-green-300 font-medium text-sm">
+                    {{ partnerUser?.user_type === 'admin' ? 'Admin Access (as Partner)' : 'Partner Access Granted' }}
+                  </h3>
+                  <p class="text-green-400 text-xs mt-1">
+                    Welcome {{ organizationName || partnerUser?.email }}! 
+                    <span v-if="partnerUser?.user_type === 'admin'">You're accessing as an admin with enterprise pricing.</span>
+                    <span v-else>You can now place orders with partner pricing.</span>
+                    <button @click="logout" class="underline hover:text-green-300 ml-2">Logout</button>
+                  </p>
+                </div>
+              </div>
+              <!-- Admin Panel Link for Admins -->
+              <div v-if="partnerUser?.user_type === 'admin'" class="flex items-center space-x-2">
+                <NuxtLink 
+                  to="/admin/dashboard" 
+                  class="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 border border-blue-500/30 rounded-lg transition-all duration-200"
+                >
+                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                  Admin Panel
+                </NuxtLink>
               </div>
             </div>
           </div>
@@ -324,6 +333,7 @@
 <script setup>
 import { ref } from 'vue'
 import OrderForm from '~/components/OrderForm.vue'
+import { usePartnerAuth } from '@/composables/usePartnerAuth'
 
 // Set page metadata
 useHead({
@@ -333,28 +343,25 @@ useHead({
   ]
 })
 
-// Authentication state
-const isAuthenticated = ref(false)
+// Use the new partner authentication system
+const { isAuthenticated, partnerUser, login, logout: partnerLogout, initAuth, organizationName } = usePartnerAuth()
+
+// Login form state
 const partnerEmail = ref('')
-const accessKey = ref('')
+const partnerPassword = ref('')
 const authLoading = ref(false)
 const authError = ref('')
 const authSuccess = ref('')
 
-// Check for existing authentication
-onMounted(() => {
-  const savedAuth = localStorage.getItem('partner_auth')
-  if (savedAuth) {
-    const authData = JSON.parse(savedAuth)
-    isAuthenticated.value = true
-    partnerEmail.value = authData.email || ''
-  }
+// Initialize authentication on mount
+onMounted(async () => {
+  await initAuth()
 })
 
 // Partner authentication function
 const authenticatePartner = async () => {
-  if (!partnerEmail.value) {
-    authError.value = 'Please enter your email address'
+  if (!partnerEmail.value || !partnerPassword.value) {
+    authError.value = 'Please enter both email and password'
     return
   }
 
@@ -363,33 +370,16 @@ const authenticatePartner = async () => {
   authSuccess.value = ''
 
   try {
-    // For now, we'll use a simple email validation
-    // In production, this would check against your partner database
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(partnerEmail.value)) {
-      authError.value = 'Please enter a valid email address'
-      return
-    }
-
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // Simple validation - accept any valid email for demo
-    // You can enhance this to check against your partner database
-    authSuccess.value = 'Access granted! Loading order system...'
+    const result = await login(partnerEmail.value, partnerPassword.value)
     
-    // Store authentication
-    localStorage.setItem('partner_auth', JSON.stringify({
-      email: partnerEmail.value,
-      timestamp: Date.now()
-    }))
-
-    // Wait a moment then authenticate
-    setTimeout(() => {
-      isAuthenticated.value = true
-      authSuccess.value = ''
-    }, 1500)
-
+    if (result.success) {
+      authSuccess.value = 'Access granted! Loading order system...'
+      // Clear form
+      partnerEmail.value = ''
+      partnerPassword.value = ''
+    } else {
+      authError.value = result.error?.message || 'Authentication failed. Please check your credentials.'
+    }
   } catch (error) {
     authError.value = 'Authentication failed. Please try again.'
   } finally {
@@ -397,27 +387,13 @@ const authenticatePartner = async () => {
   }
 }
 
-// Demo access function
-const demoAccess = () => {
-  partnerEmail.value = 'demo@example.com'
-  authSuccess.value = 'Demo access granted! Loading order system...'
-  
-  setTimeout(() => {
-    isAuthenticated.value = true
-    authSuccess.value = ''
-    localStorage.setItem('partner_auth', JSON.stringify({
-      email: 'demo@example.com',
-      timestamp: Date.now()
-    }))
-  }, 1000)
-}
+// Demo access function (removed - use real auth only)
 
 // Logout function
 const logout = () => {
-  isAuthenticated.value = false
+  partnerLogout()
   partnerEmail.value = ''
-  accessKey.value = ''
-  localStorage.removeItem('partner_auth')
+  partnerPassword.value = ''
 }
 
 // Mock data for development
