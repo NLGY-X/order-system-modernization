@@ -1,318 +1,230 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
-      <!-- Back to Home Link - moved outside the hero section -->
-      <div class="mb-8">
-        <NuxtLink 
-          to="/"
-          class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 bg-gray-800/50 hover:bg-gray-700/70 rounded-lg shadow-sm transition-all duration-200 backdrop-blur-sm border border-gray-700"
-          title="Back to Home"
-        >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-          Back to Home
-        </NuxtLink>
-      </div>
-
-      <!-- Header -->
-      <div class="text-center mb-12">
-        <div class="mb-8">
-          <h1 class="text-5xl font-bold text-white mb-6">
-            Apply for the 
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-              certificates.dev Partner Program
-            </span>
-          </h1>
-          <p class="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Join our exclusive partner program to offer industry-trusted developer certifications through your training organization with special pricing and dedicated support.
+  <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-2xl">
+      <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <!-- Header -->
+        <div class="sm:mx-auto sm:w-full sm:max-w-md mb-8">
+          <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Apply for Partnership
+          </h2>
+          <p class="mt-2 text-center text-sm text-gray-600">
+            Join the certificates.dev Partner Program for bulk pricing and exclusive benefits
           </p>
         </div>
-      </div>
 
-      <!-- Success State -->
-      <div v-if="submitted" class="max-w-2xl mx-auto">
-        <div class="bg-green-900/20 border border-green-500/30 rounded-2xl p-8 backdrop-blur-sm text-center">
-          <div class="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-bold text-white mb-4">Application Submitted!</h2>
-          <p class="text-gray-300 mb-6">
-            Thank you for your interest in the certificates.dev partner program. Our team will review your application and send you access credentials within 24 hours.
-          </p>
-          <div class="space-y-4">
-            <p class="text-sm text-gray-400">
-              <strong>Next steps:</strong>
-            </p>
-            <ul class="text-sm text-gray-400 space-y-2">
-              <li>• We'll verify your organization details</li>
-              <li>• You'll receive login credentials via email</li>
-              <li>• Access to our bulk ordering system with volume pricing</li>
-            </ul>
-          </div>
-          <div class="mt-8">
-            <NuxtLink 
-              to="/"
-              class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-            >
-              Return to Home
-            </NuxtLink>
-          </div>
-        </div>
-      </div>
-
-      <!-- Signup Form -->
-      <div v-else class="max-w-3xl mx-auto">
-        <div class="bg-gray-800/40 backdrop-blur-lg rounded-2xl shadow-2xl border border-gray-700/50 p-8">
-          <div class="mb-8 text-center">
-            <h2 class="text-2xl font-bold text-white mb-2">Apply for Partnership</h2>
-            <p class="text-gray-400">Please provide information about your organization and training programs</p>
-          </div>
-
-          <!-- Submission Status -->
-          <div v-if="submissionStatus === 'error'" class="mb-6">
-            <div class="bg-red-900/20 border border-red-500/30 rounded-lg p-4">
-              <div class="flex items-center">
-                <svg class="h-5 w-5 text-red-400 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 15c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-                <div>
-                  <h3 class="text-red-300 font-medium text-sm">Submission Error</h3>
-                  <p class="text-red-400 text-xs mt-1">{{ errorMessage || 'Please check your information and try again.' }}</p>
-                </div>
-              </div>
+        <!-- Success Message -->
+        <div v-if="submitted" class="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-green-800">Application Submitted Successfully!</h3>
+              <p class="mt-1 text-sm text-green-700">
+                Thank you for your interest in becoming a partner. Our team will review your application and contact you within 2-3 business days.
+              </p>
             </div>
           </div>
-          
-          <form @submit.prevent="handleSubmit" class="space-y-6">
-            <!-- Organization Details -->
-            <div class="grid md:grid-cols-2 gap-6">
+        </div>
+
+        <!-- Form -->
+        <form v-if="!submitted" @submit.prevent="submitApplication" class="space-y-6">
+          <!-- Organization Information -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-medium text-gray-900">Organization Information</h3>
+            
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Organization Name *
-                </label>
+                <label for="organization_name" class="block text-sm font-medium text-gray-700">Organization Name *</label>
                 <input
-                  v-model="form.organizationName"
+                  id="organization_name"
+                  v-model="form.organization_name"
                   type="text"
                   required
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Your company or institution name"
                 />
               </div>
-              
+
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Organization Type *
-                </label>
+                <label for="organization_type" class="block text-sm font-medium text-gray-700">Organization Type *</label>
                 <select
-                  v-model="form.organizationType"
+                  id="organization_type"
+                  v-model="form.organization_type"
                   required
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="">Select organization type</option>
-                  <option value="training-provider">Training Provider</option>
-                  <option value="bootcamp">Coding Bootcamp</option>
-                  <option value="university">University/College</option>
-                  <option value="corporate">Corporate Training</option>
-                  <option value="consultancy">IT Consultancy</option>
-                  <option value="other">Other</option>
+                  <option value="">Select type</option>
+                  <option value="Training Provider">Training Provider</option>
+                  <option value="Bootcamp">Bootcamp</option>
+                  <option value="University">University</option>
+                  <option value="Corporate Training">Corporate Training</option>
+                  <option value="Online Platform">Online Platform</option>
+                  <option value="Consultant">Consultant</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
             </div>
 
-            <!-- Contact Information -->
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Your Name *
-                </label>
+                <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
                 <input
-                  v-model="form.contactName"
+                  id="website"
+                  v-model="form.website"
+                  type="url"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="https://yourcompany.com"
+                />
+              </div>
+
+              <div>
+                <label for="country" class="block text-sm font-medium text-gray-700">Country *</label>
+                <select
+                  id="country"
+                  v-model="form.country"
+                  required
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">Select country</option>
+                  <option value="United States">United States</option>
+                  <option value="United Kingdom">United Kingdom</option>
+                  <option value="Canada">Canada</option>
+                  <option value="Germany">Germany</option>
+                  <option value="France">France</option>
+                  <option value="India">India</option>
+                  <option value="Brazil">Brazil</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-medium text-gray-900">Contact Information</h3>
+            
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div>
+                <label for="contact_name" class="block text-sm font-medium text-gray-700">Contact Name *</label>
+                <input
+                  id="contact_name"
+                  v-model="form.contact_name"
                   type="text"
                   required
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Your full name"
                 />
               </div>
-              
+
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Job Title *
-                </label>
+                <label for="job_title" class="block text-sm font-medium text-gray-700">Job Title *</label>
                 <input
-                  v-model="form.jobTitle"
+                  id="job_title"
+                  v-model="form.job_title"
                   type="text"
                   required
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Your role/position"
                 />
               </div>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Business Email *
-                </label>
+                <label for="email" class="block text-sm font-medium text-gray-700">Email Address *</label>
                 <input
+                  id="email"
                   v-model="form.email"
                   type="email"
                   required
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="your.email@company.com"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="your@email.com"
                 />
               </div>
-              
+
               <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Phone Number
-                </label>
+                <label for="phone" class="block text-sm font-medium text-gray-700">Phone Number</label>
                 <input
+                  id="phone"
                   v-model="form.phone"
                   type="tel"
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
             </div>
+          </div>
 
-            <!-- Business Details -->
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Company Website
-                </label>
-                <input
-                  v-model="form.website"
-                  type="url"
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="https://yourcompany.com"
-                />
-              </div>
-              
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">
-                  Country/Region *
-                </label>
-                <input
-                  v-model="form.country"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="United States"
-                />
-              </div>
-            </div>
-
-            <!-- Training Details -->
+          <!-- Partnership Details -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-medium text-gray-900">Partnership Details</h3>
+            
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">
-                Expected Monthly Volume *
-              </label>
+              <label for="expected_volume" class="block text-sm font-medium text-gray-700">Expected Monthly Volume *</label>
               <select
-                v-model="form.expectedVolume"
+                id="expected_volume"
+                v-model="form.expected_volume"
                 required
-                class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">Select expected monthly volume</option>
-                <option value="10-50">10-50 certificates</option>
-                <option value="51-100">51-100 certificates</option>
-                <option value="101-500">101-500 certificates</option>
-                <option value="501-1000">501-1,000 certificates</option>
-                <option value="1000+">1,000+ certificates</option>
+                <option value="">Select expected volume</option>
+                <option value="1-50">1-50 certificates/month</option>
+                <option value="51-100">51-100 certificates/month</option>
+                <option value="101-250">101-250 certificates/month</option>
+                <option value="251-500">251-500 certificates/month</option>
+                <option value="500+">500+ certificates/month</option>
               </select>
+              <p class="mt-1 text-xs text-gray-500">Higher volumes qualify for better pricing tiers</p>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">
-                Certifications of Interest
-              </label>
-              <div class="grid md:grid-cols-2 gap-3">
-                <label v-for="cert in certificationOptions" :key="cert" class="flex items-center">
+              <label for="certifications_interest" class="block text-sm font-medium text-gray-700">Certification Interests</label>
+              <div class="mt-2 space-y-2">
+                <label v-for="cert in certificationOptions" :key="cert" class="inline-flex items-center mr-4">
                   <input
-                    v-model="form.certifications"
-                    :value="cert"
                     type="checkbox"
-                    class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500 focus:ring-2"
+                    :value="cert"
+                    v-model="form.certifications_interest"
+                    class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                   />
-                  <span class="ml-3 text-sm text-gray-300">{{ cert }}</span>
+                  <span class="ml-2 text-sm text-gray-700">{{ cert }}</span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-300 mb-2">
-                Tell us about your training programs
-              </label>
+              <label for="description" class="block text-sm font-medium text-gray-700">Tell us about your training programs</label>
               <textarea
+                id="description"
                 v-model="form.description"
                 rows="4"
-                class="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Describe your training programs, target audience, and how you plan to use certificates.dev certifications..."
               ></textarea>
             </div>
+          </div>
 
-            <!-- Submit Button -->
+          <!-- Submit -->
+          <div class="pt-4">
             <button
               type="submit"
-              :disabled="submissionStatus === 'loading' || !isFormValid"
-              class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 disabled:from-gray-600 disabled:to-gray-700 text-white py-4 px-6 rounded-xl font-semibold text-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+              :disabled="submitting"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
             >
-              <span v-if="submissionStatus === 'loading'" class="flex items-center justify-center">
-                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Submitting Application...
-              </span>
-              <span v-else class="flex items-center justify-center">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Submit Application
-              </span>
+              {{ submitting ? 'Submitting Application...' : 'Submit Partner Application' }}
             </button>
-          </form>
-        </div>
-      </div>
+          </div>
+        </form>
 
-      <!-- Footer -->
-      <div class="mt-20 text-center">
-        <div class="border-t border-gray-700/50 pt-12">
-          <p class="text-gray-400 mb-8 text-lg">
-            Questions about our partner program? Contact our partnerships team.
-          </p>
-          
-          <div class="flex flex-col sm:flex-row justify-center items-center gap-6">
-            <a 
-              href="mailto:partnerships@certificates.dev" 
-              class="group inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-gray-300 bg-gray-800/50 hover:bg-gray-700/70 border border-gray-600/50 rounded-lg transition-all duration-200 backdrop-blur-sm min-w-[160px]"
-            >
-              <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.93a1.78 1.78 0 001.76 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              Contact Partnerships
-            </a>
-            
-            <a 
-              href="https://certificates.dev" 
-              target="_blank"
-              class="group inline-flex items-center justify-center px-6 py-3 text-sm font-medium text-blue-300 bg-blue-900/30 hover:bg-blue-800/50 border border-blue-500/30 rounded-lg transition-all duration-200 backdrop-blur-sm min-w-[160px]"
-            >
-              <svg class="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              Visit Main Site
-            </a>
-          </div>
-          
-          <div class="mt-8 pt-8 border-t border-gray-800/50">
-            <p class="text-gray-500 text-sm">
-              © 2025 Certificates.dev - Professional Developer Certifications
-            </p>
-          </div>
+        <!-- Back to Homepage -->
+        <div class="mt-6 text-center">
+          <NuxtLink to="/" class="text-sm text-blue-600 hover:text-blue-500">
+            ← Back to Homepage
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -320,105 +232,83 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 // Set page metadata
 useHead({
-  title: 'Apply for Bulk Access - Certificates.dev',
+  title: 'Partner Program Application - certificates.dev',
   meta: [
-    { name: 'description', content: 'Apply for bulk access to order developer certifications at volume discounts for your training organization.' }
+    { name: 'description', content: 'Apply to become a certificates.dev partner and get access to bulk pricing for developer certifications.' }
   ]
 })
 
-// Form data
+// Data
+const submitted = ref(false)
+const submitting = ref(false)
+
+const certificationOptions = [
+  'Vue.js Certifications',
+  'JavaScript Certifications', 
+  'Angular Certifications',
+  'Nuxt.js Certifications',
+  'React Certifications (Future)',
+  'Node.js Certifications (Future)'
+]
+
 const form = ref({
-  organizationName: '',
-  organizationType: '',
-  contactName: '',
-  jobTitle: '',
+  organization_name: '',
+  organization_type: '',
+  contact_name: '',
+  job_title: '',
   email: '',
   phone: '',
   website: '',
   country: '',
-  expectedVolume: '',
-  certifications: [],
+  expected_volume: '',
+  certifications_interest: [],
   description: ''
 })
 
-// Submission state
-const submissionStatus = ref('idle')
-const errorMessage = ref('')
-const submitted = ref(false)
-
-// Certification options
-const certificationOptions = [
-  'Vue.js Developer',
-  'Vue.js Senior',
-  'JavaScript Developer', 
-  'JavaScript Senior',
-  'Angular Developer',
-  'Angular Senior',
-  'Nuxt Developer',
-  'Nuxt Senior',
-  'React (Coming Soon)',
-  'TypeScript (Coming Soon)'
-]
-
-// Form validation
-const isFormValid = computed(() => {
-  return form.value.organizationName && 
-         form.value.organizationType && 
-         form.value.contactName && 
-         form.value.jobTitle && 
-         form.value.email && 
-         form.value.country && 
-         form.value.expectedVolume &&
-         isValidEmail(form.value.email)
-})
-
-const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  return emailRegex.test(email)
-}
-
-// Form submission
-const handleSubmit = async () => {
-  if (!isFormValid.value) {
-    errorMessage.value = 'Please fill in all required fields correctly'
-    submissionStatus.value = 'error'
-    return
-  }
-
-  submissionStatus.value = 'loading'
-  errorMessage.value = ''
-
+// Submit application
+const submitApplication = async () => {
   try {
-    const response = await $fetch('/api/signup', {
+    submitting.value = true
+    
+    const response = await fetch('/api/submit-partner-application', {
       method: 'POST',
-      body: form.value
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(form.value)
     })
 
-    if (response.success) {
-      console.log('Signup successful:', response.data)
-      submitted.value = true
-      submissionStatus.value = 'success'
-    } else {
-      throw new Error(response.message || 'Submission failed')
+    if (!response.ok) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Failed to submit application')
     }
 
-  } catch (error) {
-    console.error('Signup error:', error)
+    submitted.value = true
     
-    // Handle different error types
-    if (error.statusCode === 400) {
-      errorMessage.value = error.data?.message || 'Please check your information and try again.'
-    } else if (error.statusCode === 500) {
-      errorMessage.value = 'Server error. Please try again later.'
-    } else {
-      errorMessage.value = 'Failed to submit application. Please try again.'
+    // Reset form
+    form.value = {
+      organization_name: '',
+      organization_type: '',
+      contact_name: '',
+      job_title: '',
+      email: '',
+      phone: '',
+      website: '',
+      country: '',
+      expected_volume: '',
+      certifications_interest: [],
+      description: ''
     }
     
-    submissionStatus.value = 'error'
+  } catch (error) {
+    console.error('Error submitting application:', error)
+    alert(error.message || 'Failed to submit application. Please try again.')
+  } finally {
+    submitting.value = false
   }
 }
 </script> 
