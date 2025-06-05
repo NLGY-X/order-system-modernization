@@ -49,7 +49,7 @@
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
           <div class="text-center lg:text-left">
-            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-relaxed">
               Join the certificates.dev
               <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 block">
                 Partner Program
