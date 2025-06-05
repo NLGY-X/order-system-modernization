@@ -13,7 +13,12 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "test:pricing": "node tests/run-pricing-tests.js",
-    "test:pricing-watch": "vitest tests/pricing-calculations.test.js --watch"
+    "test:pricing-watch": "vitest tests/pricing-calculations.test.js --watch",
+    "test:partner": "vitest run tests/partner-system.test.js",
+    "test:admin": "vitest run tests/admin-system.test.js",
+    "test:auth": "vitest run tests/partner-system.test.js tests/admin-system.test.js",
+    "test:integration": "vitest run tests/integration.test.js",
+    "test:all": "npm run test:pricing && vitest run tests/partner-system.test.js tests/admin-system.test.js tests/integration.test.js"
   },
   "dependencies": {
     "@stripe/stripe-js": "^7.3.1",

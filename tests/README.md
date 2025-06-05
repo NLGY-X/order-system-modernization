@@ -34,6 +34,28 @@ This directory contains comprehensive tests for the certificates.dev Partner Pro
 - **Error Handling**: Invalid inputs and missing fields
 - **Response Validation**: Correct pricing structure and values
 
+### 6. Partner System Testing
+- **Application Submission** (`/api/submit-partner-application`): Form validation, duplicate prevention, email format validation
+- **Partner Creation** (`/api/admin/create-partner`): Admin partner creation, validation, duplicate prevention
+- **Partner Authentication** (`/api/auth/verify-partner-status`): Login validation, role verification, cross-system access
+- **Volume Tier Assignment**: Automatic tier assignment based on expected volume
+- **Application Management**: Status updates (approve/reject/contact), admin workflow
+- **Partner Status Management**: Active/suspended status toggles
+
+### 7. Admin System Testing
+- **Admin Authentication** (`/api/auth/verify-admin-status`): Login validation, session management, role verification
+- **Admin Authorization**: Permission checks, suspended admin handling, cross-system access
+- **Admin User Management**: Profile retrieval, login timestamp updates
+- **Dashboard Access**: Admin dashboard data access, non-admin prevention
+- **Role Validation**: Permission-based access control, inactive admin handling
+
+### 8. Integration Testing
+- **End-to-End Workflows**: Complete partner application → approval → login → ordering process
+- **Partner Tier Benefits**: Volume tier pricing verification across different partner levels
+- **Admin Cross-System Access**: Admin access to partner system with enterprise privileges
+- **Error Recovery**: Partner creation failure handling, database connectivity issues
+- **Security Testing**: Unauthorized access prevention, input sanitization, role-based access
+
 ## Test Files
 
 ### `pricing-calculations.test.js`
@@ -45,11 +67,62 @@ Integration tests for the API endpoints with mocked database responses.
 ### `run-pricing-tests.js`
 Standalone test runner with no dependencies for quick validation.
 
+### `partner-system.test.js`
+Comprehensive unit tests for the partner management system including:
+- Partner application submission and validation
+- Admin partner creation workflow
+- Partner authentication and authorization
+- Volume tier assignment logic
+- Application and partner status management
+- Password generation and security
+
+### `admin-system.test.js`
+Complete admin system testing covering:
+- Admin authentication and session management
+- Authorization checks and role validation
+- Admin user management operations
+- Dashboard access control
+- Cross-system access permissions
+- Error handling and security
+
+### `integration.test.js`
+End-to-end integration tests for complete workflows:
+- Full partner application → approval → login → ordering workflow
+- Partner tier benefits and pricing verification
+- Admin cross-system access scenarios
+- Error recovery and cleanup processes
+- Security testing and input validation
+
 ## Running Tests
 
 ### Quick Pricing Tests (No Dependencies)
 ```bash
 npm run test:pricing
+```
+
+### Partner System Tests
+```bash
+npm run test:partner
+```
+
+### Admin System Tests
+```bash
+npm run test:admin
+```
+
+### Authentication Tests (Partner + Admin)
+```bash
+npm run test:auth
+```
+
+### Integration Tests
+```bash
+npm run test:integration
+```
+
+### All Tests (Complete Suite)
+```bash
+npm run test:all
 ```
 
 ### Full Vitest Suite
@@ -146,5 +219,31 @@ Our test suite aims for:
 - ✅ All product categories tested
 - ✅ Error conditions and edge cases tested
 - ✅ API endpoints validated with realistic scenarios
+- ✅ Complete partner application workflow tested
+- ✅ Admin authentication and authorization tested
+- ✅ Partner authentication and role verification tested
+- ✅ Integration between all systems tested
+- ✅ Security vulnerabilities and edge cases tested
+- ✅ Error recovery and cleanup procedures tested
 
-This comprehensive testing ensures that partners receive accurate pricing quotes and orders are processed with correct discount calculations. 
+## Test Statistics
+
+**Total Tests**: 62 tests across 6 test files
+- **Pricing System**: 18 tests (pricing calculations + API)
+- **Partner System**: 18 tests (applications, creation, auth)
+- **Admin System**: 16 tests (authentication, authorization, management)
+- **Integration**: 10 tests (end-to-end workflows, security)
+
+**Test Categories**:
+- **Unit Tests**: 52 tests (individual function/component testing)
+- **Integration Tests**: 10 tests (cross-system workflow testing)
+- **Security Tests**: 8 tests (authorization, input validation, access control)
+- **Error Handling**: 12 tests (graceful failure and recovery)
+
+This comprehensive testing ensures that:
+- Partners receive accurate pricing quotes and orders are processed correctly
+- Partner applications are handled securely and efficiently  
+- Admin access is properly controlled and authenticated
+- All systems work together seamlessly
+- Security vulnerabilities are prevented
+- Errors are handled gracefully with proper cleanup 
