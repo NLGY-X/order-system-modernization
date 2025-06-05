@@ -71,6 +71,18 @@
             Analytics
           </NuxtLink>
 
+          <!-- Partners -->
+          <NuxtLink
+            to="/admin/partners"
+            class="flex items-center px-4 py-2 text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            :class="{ 'bg-blue-50 text-blue-700 border-r-2 border-blue-600': $route.path.startsWith('/admin/partners') }"
+          >
+            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857M12 4a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            Partners
+          </NuxtLink>
+
           <!-- Admin Users -->
           <NuxtLink
             to="/admin/users"
