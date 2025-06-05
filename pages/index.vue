@@ -44,7 +44,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 py-20 sm:py-32">
+    <section class="relative bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 py-20 sm:py-32">
       <div class="absolute inset-0 bg-blue-500/5 backdrop-blur-3xl"></div>
       <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
